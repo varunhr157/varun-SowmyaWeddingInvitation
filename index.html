@@ -906,52 +906,43 @@
     <!-- =========================================================
          JAVASCRIPT LOGIC: DOORS, AUDIO, PETALS, COUNTDOWN, BLESSINGS
     ========================================================== -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, addDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+    <script>
+        // Google Apps Script Web App URL connected to your Google Sheet
+        const GOOGLE_SHEET_API_URL = "https://script.google.com/macros/s/AKfycby3jcVC6e1QLMHHxY8OnBAOQsfIwRQByUEsCeD87npfFT8sLZIsWeaGn_Fwz4UJYnOr/exec";
 
-        // Default heartfelt blessings shown alongside live guest entries
+        // Default curated blessings shown alongside live Google Sheet entries
         const defaultBlessings = [
             {
                 id: 'default-1',
                 name: 'Elders of Both Families',
                 relation: 'Davanagere',
                 blessing: 'May Lord Venkateshwara and Goddess Lakshmi shower eternal happiness, good health, and prosperity upon Varun & Sowmya.',
-                isFeatured: true,
-                createdAt: 4
+                isFeatured: true
             },
             {
                 id: 'default-2',
                 name: 'Ananya & Karthik',
                 relation: 'Friends • Bengaluru',
                 blessing: 'So thrilled for both of you! Counting down the days to celebrate in Davanagere. Wishing you a lifetime of laughter!',
-                isFeatured: false,
-                createdAt: 3
+                isFeatured: false
             },
             {
                 id: 'default-3',
                 name: 'Suresh & Padma Rao',
                 relation: 'Family Elders',
                 blessing: 'Heartiest congratulations Varun and Sowmya! May your bond grow stronger with every passing year. Warmest blessings always.',
-                isFeatured: false,
-                createdAt: 2
+                isFeatured: false
             },
             {
                 id: 'default-4',
                 name: 'Rohan Kulkarni',
                 relation: 'Friend • Mysuru',
                 blessing: 'Wishing the gorgeous couple a grand and joyous wedding celebration. May your journey together be filled with endless love!',
-                isFeatured: false,
-                createdAt: 1
+                isFeatured: false
             }
         ];
 
-        let db = null;
-        let auth = null;
-        let currentUser = null;
         let liveGuestBlessings = [];
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'varun-sowmya-wedding';
 
         function createBlessingCardElement(item) {
             const card = document.createElement('div');
@@ -969,7 +960,7 @@
             const badgeSpan = document.createElement('span');
             badgeSpan.className = item.isFeatured || item.isNew
                 ? "text-[10px] font-montserrat px-2.5 py-0.5 rounded-full bg-temple-emerald text-temple-lightGold border border-temple-gold/40 shrink-0"
-                : "text-[10px] font-montserrat px-2 py-0.5 rounded-full bg-temple-maroon text-temple-lightGold border border-temple-gold/30 shrink-0";
+                : "text-[10px] font-montserrat px-2.5 py-0.5 rounded-full bg-temple-maroon text-temple-lightGold border border-temple-gold/30 shrink-0";
             badgeSpan.textContent = item.relation || 'Warm Wishes';
 
             const textP = document.createElement('p');
@@ -988,9 +979,7 @@
             if (!wall) return;
             wall.innerHTML = '';
 
-            // Sort live guest blessings newest first in memory
-            const sortedLive = [...liveGuestBlessings].sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
-            const combined = [...sortedLive, ...defaultBlessings];
+            const combined = [...liveGuestBlessings, ...defaultBlessings];
 
             combined.forEach(item => {
                 wall.appendChild(createBlessingCardElement(item));
@@ -1002,53 +991,40 @@
             }
         }
 
-        // Render initial list immediately while connecting
-        renderBlessingsWall();
-
-        // Initialize Shared Cloud Storage & Authentication
-        async function initSharedBlessings() {
+        // Fetch existing blessings from Google Sheets via GET
+        async function fetchBlessingsFromSheet() {
             try {
-                if (typeof __firebase_config === 'undefined') return;
-                const firebaseConfig = JSON.parse(__firebase_config);
-                const app = initializeApp(firebaseConfig);
-                auth = getAuth(app);
-                db = getFirestore(app);
-
-                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                    await signInWithCustomToken(auth, __initial_auth_token);
-                } else {
-                    await signInAnonymously(auth);
-                }
-
-                onAuthStateChanged(auth, (user) => {
-                    currentUser = user;
-                    if (!user || !db) return;
-
-                    const blessingsRef = collection(db, 'artifacts', appId, 'public', 'data', 'blessings');
-                    onSnapshot(
-                        blessingsRef,
-                        (snapshot) => {
-                            liveGuestBlessings = snapshot.docs.map(doc => ({
-                                id: doc.id,
-                                ...doc.data(),
-                                isNew: true
-                            }));
-                            renderBlessingsWall();
-                        },
-                        (error) => {
-                            console.error("Error syncing blessings:", error);
-                        }
-                    );
+                const response = await fetch(GOOGLE_SHEET_API_URL, {
+                    method: 'GET',
+                    redirect: 'follow'
                 });
+                if (!response.ok) throw new Error('Network response was not ok');
+                const rows = await response.json();
+
+                if (Array.isArray(rows)) {
+                    liveGuestBlessings = rows
+                        .filter(row => row && (row.name || row.message))
+                        .map((row, index) => ({
+                            id: 'sheet-' + index,
+                            name: String(row.name || 'Well Wisher').trim(),
+                            relation: String(row.relation || 'Warm Wishes').trim(),
+                            blessing: String(row.message || '').trim(),
+                            isNew: true
+                        }));
+                    renderBlessingsWall();
+                }
             } catch (err) {
-                console.error("Shared storage setup error:", err);
+                console.warn("Could not load blessings from Google Sheet yet:", err);
+                renderBlessingsWall();
             }
         }
 
-        initSharedBlessings();
+        // Render default blessings immediately, then sync from Google Sheet
+        renderBlessingsWall();
+        fetchBlessingsFromSheet();
 
-        // 7. Interactive Wishes & Dynamic Shared Blessings Wall
-        window.handleBlessingSubmit = async function(e) {
+        // Submit new blessing to Google Sheet via POST (with optimistic UI update & re-sync)
+        async function handleBlessingSubmit(e) {
             e.preventDefault();
             const nameInput = document.getElementById('guest-name');
             const relationInput = document.getElementById('guest-relation');
@@ -1056,62 +1032,66 @@
             const submitBtn = e.target.querySelector('button[type="submit"]');
 
             const name = nameInput.value.trim();
-            const badgeText = relationInput.value.trim() || 'Warm Wishes';
-            const blessing = blessingInput.value.trim();
+            const relation = relationInput.value.trim() || 'Warm Wishes';
+            const message = blessingInput.value.trim();
 
-            if (!name || !blessing) return;
+            if (!name || !message) return;
 
             if (submitBtn) {
                 submitBtn.disabled = true;
                 submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin text-temple-gold"></i> Saving Blessing...';
             }
 
+            // Optimistically prepend new blessing immediately
+            liveGuestBlessings.unshift({
+                id: 'optimistic-' + Date.now(),
+                name: name,
+                relation: relation,
+                blessing: message,
+                isNew: true
+            });
+            renderBlessingsWall();
+
+            // Play celebratory temple chime if ambience is enabled
+            if (window.isAudioPlaying && window.audioCtx && window.playTempleChime) {
+                window.playTempleChime(window.audioCtx, 659.25, 0);
+                window.playTempleChime(window.audioCtx, 1046.50, 0.2);
+            }
+
+            nameInput.value = '';
+            relationInput.value = '';
+            blessingInput.value = '';
+            window.showToast(`Dhanyavadagalu, ${name}! Your heartfelt blessing is saved on the sacred wall.`);
+
             try {
-                if (db && currentUser) {
-                    const blessingsRef = collection(db, 'artifacts', appId, 'public', 'data', 'blessings');
-                    await addDoc(blessingsRef, {
+                await fetch(GOOGLE_SHEET_API_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: {
+                        'Content-Type': 'text/plain;charset=utf-8'
+                    },
+                    body: JSON.stringify({
                         name: name,
-                        relation: badgeText,
-                        blessing: blessing,
-                        createdAt: Date.now(),
-                        authorId: currentUser.uid
-                    });
-                } else {
-                    // Fallback in-memory addition if offline
-                    liveGuestBlessings.unshift({
-                        id: 'local-' + Date.now(),
-                        name: name,
-                        relation: badgeText,
-                        blessing: blessing,
-                        createdAt: Date.now(),
-                        isNew: true
-                    });
-                    renderBlessingsWall();
-                }
+                        relation: relation,
+                        message: message
+                    })
+                });
 
-                // Play celebratory chime if audio is active
-                if (window.isAudioPlaying && window.audioCtx && window.playTempleChime) {
-                    window.playTempleChime(window.audioCtx, 659.25, 0);
-                    window.playTempleChime(window.audioCtx, 1046.50, 0.2);
-                }
-
-                nameInput.value = '';
-                relationInput.value = '';
-                blessingInput.value = '';
-                window.showToast(`Dhanyavadagalu, ${name}! Your heartfelt blessing is saved on the sacred wall.`);
+                // Re-sync from Google Sheet after a brief delay so all visitors see the latest rows
+                setTimeout(() => {
+                    fetchBlessingsFromSheet();
+                }, 1800);
             } catch (err) {
-                console.error("Failed to save blessing:", err);
-                window.showToast('Unable to save blessing right now. Please try again.');
+                console.error("Failed to post blessing to Google Sheet:", err);
+                window.showToast('Blessing shown on wall, though network sync had a hiccup.');
             } finally {
                 if (submitBtn) {
                     submitBtn.disabled = false;
                     submitBtn.innerHTML = '<i class="fa-solid fa-paper-plane text-temple-gold"></i> Post Blessing to Wall';
                 }
             }
-        };
-    </script>
+        }
 
-    <script>
         // 1. Toast Message Helper (Replaces alert())
         let toastTimeout;
         window.showToast = function(msg) {
