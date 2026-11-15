@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Varun & Sowmya | Royal South Indian Wedding Invitation</title>
+    <title>Sowmya & Varun | Royal South Indian Wedding Invitation</title>
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -853,13 +853,13 @@
                             <span class="text-temple-gold">❀</span> Sacred Blessings Wall
                         </h3>
                         <span id="blessings-count" class="text-xs font-montserrat px-3 py-1 rounded-full bg-temple-darkMaroon border border-temple-gold/40 text-temple-gold">
-                            4 Blessings
+                            0 Blessings
                         </span>
                     </div>
 
                     <!-- Scrollable Blessings Cards Grid -->
                     <div id="blessings-wall" class="grid grid-cols-1 sm:grid-cols-2 gap-4 max-h-[540px] overflow-y-auto pr-1">
-                        <!-- Live blessings loaded from shared cloud storage alongside initial family blessings -->
+                        <!-- Live blessings loaded directly from Google Sheet -->
                     </div>
                 </div>
 
@@ -910,45 +910,11 @@
         // Google Apps Script Web App URL connected to your Google Sheet
         const GOOGLE_SHEET_API_URL = "https://script.google.com/macros/s/AKfycby3jcVC6e1QLMHHxY8OnBAOQsfIwRQByUEsCeD87npfFT8sLZIsWeaGn_Fwz4UJYnOr/exec";
 
-        // Default curated blessings shown alongside live Google Sheet entries
-        const defaultBlessings = [
-            {
-                id: 'default-1',
-                name: 'Elders of Both Families',
-                relation: 'Davanagere',
-                blessing: 'May Lord Venkateshwara and Goddess Lakshmi shower eternal happiness, good health, and prosperity upon Varun & Sowmya.',
-                isFeatured: true
-            },
-            {
-                id: 'default-2',
-                name: 'Ananya & Karthik',
-                relation: 'Friends • Bengaluru',
-                blessing: 'So thrilled for both of you! Counting down the days to celebrate in Davanagere. Wishing you a lifetime of laughter!',
-                isFeatured: false
-            },
-            {
-                id: 'default-3',
-                name: 'Suresh & Padma Rao',
-                relation: 'Family Elders',
-                blessing: 'Heartiest congratulations Varun and Sowmya! May your bond grow stronger with every passing year. Warmest blessings always.',
-                isFeatured: false
-            },
-            {
-                id: 'default-4',
-                name: 'Rohan Kulkarni',
-                relation: 'Friend • Mysuru',
-                blessing: 'Wishing the gorgeous couple a grand and joyous wedding celebration. May your journey together be filled with endless love!',
-                isFeatured: false
-            }
-        ];
-
         let liveGuestBlessings = [];
 
         function createBlessingCardElement(item) {
             const card = document.createElement('div');
-            card.className = item.isNew
-                ? "p-5 rounded-2xl bg-temple-darkMaroon border-2 border-temple-gold shadow-lg relative transition-all duration-500"
-                : "p-5 rounded-2xl bg-temple-darkMaroon/85 border border-temple-gold/40 shadow-md relative";
+            card.className = "p-5 rounded-2xl bg-temple-darkMaroon border-2 border-temple-gold shadow-lg relative transition-all duration-500";
 
             const headerDiv = document.createElement('div');
             headerDiv.className = "flex items-center justify-between mb-2 gap-2";
@@ -958,9 +924,7 @@
             nameSpan.textContent = item.name;
 
             const badgeSpan = document.createElement('span');
-            badgeSpan.className = item.isFeatured || item.isNew
-                ? "text-[10px] font-montserrat px-2.5 py-0.5 rounded-full bg-temple-emerald text-temple-lightGold border border-temple-gold/40 shrink-0"
-                : "text-[10px] font-montserrat px-2.5 py-0.5 rounded-full bg-temple-maroon text-temple-lightGold border border-temple-gold/30 shrink-0";
+            badgeSpan.className = "text-[10px] font-montserrat px-2.5 py-0.5 rounded-full bg-temple-emerald text-temple-lightGold border border-temple-gold/40 shrink-0";
             badgeSpan.textContent = item.relation || 'Warm Wishes';
 
             const textP = document.createElement('p');
@@ -979,16 +943,30 @@
             if (!wall) return;
             wall.innerHTML = '';
 
-            const combined = [...liveGuestBlessings, ...defaultBlessings];
-
-            combined.forEach(item => {
-                wall.appendChild(createBlessingCardElement(item));
-            });
-
             const countEl = document.getElementById('blessings-count');
             if (countEl) {
-                countEl.textContent = `${combined.length} Blessings`;
+                const count = liveGuestBlessings.length;
+                countEl.textContent = `${count} ${count === 1 ? 'Blessing' : 'Blessings'}`;
             }
+
+            if (liveGuestBlessings.length === 0) {
+                const emptyState = document.createElement('div');
+                emptyState.className = "sm:col-span-2 p-8 sm:p-10 rounded-2xl bg-temple-darkMaroon/80 border border-dashed border-temple-gold/50 text-center flex flex-col items-center justify-center";
+                emptyState.innerHTML = `
+                    <div class="w-12 h-12 rounded-full bg-temple-maroon border border-temple-gold/60 flex items-center justify-center text-temple-gold mb-3">
+                        <i class="fa-solid fa-hands-praying text-lg"></i>
+                    </div>
+                    <p class="font-cormorant italic text-xl sm:text-2xl text-temple-lightGold leading-relaxed">
+                        No blessings posted yet — be the first to shower Varun &amp; Sowmya with your wishes!
+                    </p>
+                `;
+                wall.appendChild(emptyState);
+                return;
+            }
+
+            liveGuestBlessings.forEach(item => {
+                wall.appendChild(createBlessingCardElement(item));
+            });
         }
 
         // Fetch existing blessings from Google Sheets via GET
@@ -1008,8 +986,7 @@
                             id: 'sheet-' + index,
                             name: String(row.name || 'Well Wisher').trim(),
                             relation: String(row.relation || 'Warm Wishes').trim(),
-                            blessing: String(row.message || '').trim(),
-                            isNew: true
+                            blessing: String(row.message || '').trim()
                         }));
                     renderBlessingsWall();
                 }
@@ -1019,7 +996,7 @@
             }
         }
 
-        // Render default blessings immediately, then sync from Google Sheet
+        // Render initial empty state, then sync live blessings from Google Sheet
         renderBlessingsWall();
         fetchBlessingsFromSheet();
 
