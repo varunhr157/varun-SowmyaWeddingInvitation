@@ -136,29 +136,53 @@
             position: relative;
         }
 
-        /* Temple Door Entrance Overlay */
+        /* Solid Royal Folded Wedding Envelope / Letter Entrance Overlay */
         #temple-curtain {
-            transition: opacity 1s ease-in-out, visibility 1s ease-in-out;
+            background-color: #2B030B;
+            transition: opacity 0.9s ease-in-out, visibility 0.9s ease-in-out;
         }
         .curtain-hidden {
             display: none !important;
         }
-        .door-panel {
-            transition: transform 1.6s cubic-bezier(0.77, 0, 0.175, 1);
-            background: linear-gradient(180deg, #4A0714 0%, #2B030B 100%);
-            background-image: 
-                radial-gradient(circle at center, rgba(212, 175, 55, 0.12) 0%, transparent 70%),
-                repeating-linear-gradient(0deg, rgba(212, 175, 55, 0.05) 0px, rgba(212, 175, 55, 0.05) 1px, transparent 1px, transparent 20px);
+        .envelope-base {
+            background: linear-gradient(145deg, #4A0714 0%, #2B030B 100%);
         }
-        .doors-open #left-door {
+        .envelope-flap-left {
+            clip-path: polygon(0 0, 56% 50%, 0 100%);
+            background: linear-gradient(135deg, #5C0A1A 0%, #3B040F 100%);
+            transition: transform 1.4s cubic-bezier(0.77, 0, 0.175, 1), opacity 1.2s ease;
+        }
+        .envelope-flap-right {
+            clip-path: polygon(100% 0, 44% 50%, 100% 100%);
+            background: linear-gradient(225deg, #5C0A1A 0%, #3B040F 100%);
+            transition: transform 1.4s cubic-bezier(0.77, 0, 0.175, 1), opacity 1.2s ease;
+        }
+        .envelope-flap-bottom {
+            clip-path: polygon(0 100%, 50% 44%, 100% 100%);
+            background: linear-gradient(0deg, #32030C 0%, #520816 100%);
+            transition: transform 1.4s cubic-bezier(0.77, 0, 0.175, 1), opacity 1.2s ease;
+        }
+        .envelope-flap-top {
+            clip-path: polygon(0 0, 100% 0, 50% 56%);
+            background: linear-gradient(180deg, #680D1F 0%, #440612 100%);
+            transform-origin: top center;
+            transition: transform 1.1s cubic-bezier(0.77, 0, 0.175, 1);
+        }
+        .doors-open .envelope-flap-top {
+            transform: rotateX(180deg);
+        }
+        .doors-open .envelope-flap-left {
             transform: translateX(-100%);
         }
-        .doors-open #right-door {
+        .doors-open .envelope-flap-right {
             transform: translateX(100%);
+        }
+        .doors-open .envelope-flap-bottom {
+            transform: translateY(100%);
         }
         .doors-open #door-seal {
             opacity: 0;
-            transform: scale(1.4);
+            transform: scale(1.35);
             pointer-events: none;
         }
 
@@ -319,59 +343,62 @@
     </button>
 
     <!-- =========================================================
-         GRAND TEMPLE DOORS ENTRANCE OVERLAY
+         ROYAL FOLDED WEDDING LETTER / ENVELOPE ENTRANCE OVERLAY
     ========================================================== -->
-    <div id="temple-curtain" class="fixed inset-0 z-50 flex overflow-hidden">
-        <!-- Left Temple Door -->
-        <div id="left-door" class="door-panel w-1/2 h-full border-r-4 border-temple-gold relative flex items-center justify-end pr-4 sm:pr-8 shadow-2xl">
-            <!-- Brass Studs Pattern -->
-            <div class="absolute inset-4 border border-temple-gold/40 pointer-events-none flex flex-col justify-between p-4">
-                <div class="flex justify-between text-temple-gold/60 text-xs">✦ ✦ ✦</div>
-                <div class="flex justify-between text-temple-gold/60 text-xs">✦ ✦ ✦</div>
-            </div>
-            <!-- Left Half Mandala -->
-            <svg class="w-32 h-64 sm:w-48 sm:h-96 text-temple-gold/30" viewBox="0 0 100 200" fill="none">
-                <path d="M100 10 A90 90 0 0 0 100 190" stroke="currentColor" stroke-width="2"/>
-                <path d="M100 30 A70 70 0 0 0 100 170" stroke="currentColor" stroke-width="1.5" stroke-dasharray="4 4"/>
-                <path d="M100 50 A50 50 0 0 0 100 150" stroke="currentColor" stroke-width="2"/>
+    <div id="temple-curtain" class="fixed inset-0 z-50 flex items-center justify-center overflow-hidden envelope-base" style="perspective: 1400px;">
+        
+        <!-- Ornate Outer Gold Zari Frame -->
+        <div class="absolute inset-3 sm:inset-6 border-2 border-temple-gold/50 pointer-events-none z-20"></div>
+        <div class="absolute inset-5 sm:inset-8 border border-dashed border-temple-gold/30 pointer-events-none z-20"></div>
+
+        <!-- Left & Right Folded Flaps -->
+        <div class="envelope-flap-left absolute inset-0 z-10 shadow-2xl"></div>
+        <div class="envelope-flap-right absolute inset-0 z-10 shadow-2xl"></div>
+
+        <!-- Bottom Folded Pocket -->
+        <div class="envelope-flap-bottom absolute inset-0 z-10 shadow-2xl"></div>
+
+        <!-- Top Triangular Folded Letter Flap + Gold Crease Lines -->
+        <div class="envelope-flap-top absolute inset-0 z-20 shadow-[0_20px_50px_rgba(0,0,0,0.85)]">
+            <svg class="w-full h-full pointer-events-none" viewBox="0 0 100 100" preserveAspectRatio="none">
+                <polyline points="0,0 50,56 100,0" fill="none" stroke="#D4AF37" stroke-width="0.45" />
             </svg>
         </div>
 
-        <!-- Right Temple Door -->
-        <div id="right-door" class="door-panel w-1/2 h-full border-l-4 border-temple-gold relative flex items-center justify-start pl-4 sm:pl-8 shadow-2xl">
-            <div class="absolute inset-4 border border-temple-gold/40 pointer-events-none flex flex-col justify-between p-4">
-                <div class="flex justify-between text-temple-gold/60 text-xs">✦ ✦ ✦</div>
-                <div class="flex justify-between text-temple-gold/60 text-xs">✦ ✦ ✦</div>
-            </div>
-            <!-- Right Half Mandala -->
-            <svg class="w-32 h-64 sm:w-48 sm:h-96 text-temple-gold/30" viewBox="0 0 100 200" fill="none">
-                <path d="M0 10 A90 90 0 0 1 0 190" stroke="currentColor" stroke-width="2"/>
-                <path d="M0 30 A70 70 0 0 1 0 170" stroke="currentColor" stroke-width="1.5" stroke-dasharray="4 4"/>
-                <path d="M0 50 A50 50 0 0 1 0 150" stroke="currentColor" stroke-width="2"/>
-            </svg>
-        </div>
+        <!-- Gold Diagonal Pocket Crease Lines -->
+        <svg class="absolute inset-0 w-full h-full pointer-events-none z-10 opacity-60" viewBox="0 0 100 100" preserveAspectRatio="none">
+            <polyline points="0,100 50,44 100,100" fill="none" stroke="#D4AF37" stroke-width="0.35" />
+        </svg>
 
-        <!-- Center Sacred Brass Seal / Open Button -->
-        <div id="door-seal" class="absolute inset-0 flex flex-col items-center justify-center z-10 transition-all duration-700 px-4 text-center">
+        <!-- Center Sacred Brass Wax Seal / Tap to Open -->
+        <div id="door-seal" class="relative z-30 flex flex-col items-center justify-center transition-all duration-700 px-4 text-center">
+            <div class="mb-5">
+                <p class="font-cinzel text-temple-gold text-xs sm:text-sm tracking-[0.3em] uppercase mb-1">
+                    ॥ ಶ್ರೀ ಗಣೇಶಾಯ ನಮಃ ॥
+                </p>
+                <p class="font-cormorant italic text-temple-lightGold text-lg sm:text-2xl">
+                    A Sacred Wedding Invitation For You
+                </p>
+            </div>
+
             <button onclick="openTempleDoors()" class="group relative flex flex-col items-center justify-center focus:outline-none cursor-pointer">
                 <!-- Glowing Aura -->
-                <div class="absolute w-44 h-44 sm:w-56 sm:h-56 rounded-full bg-temple-gold/20 blur-xl group-hover:bg-temple-gold/40 transition-all duration-500"></div>
+                <div class="absolute w-44 h-44 sm:w-56 sm:h-56 rounded-full bg-temple-gold/25 blur-xl group-hover:bg-temple-gold/45 transition-all duration-500"></div>
                 
-                <!-- Ornate Brass Medallion -->
-                <div class="relative w-36 h-36 sm:w-44 sm:h-44 rounded-full bg-gradient-to-br from-temple-maroon via-temple-darkMaroon to-black border-4 border-temple-gold shadow-[0_0_40px_rgba(212,175,55,0.6)] flex flex-col items-center justify-center p-4 group-hover:scale-105 transition-transform duration-500">
-                    <div class="w-full h-full rounded-full border border-dashed border-temple-lightGold/70 flex flex-col items-center justify-center">
-                        <!-- Sacred Lotus / Kalash SVG -->
+                <!-- Ornate Brass Wax Seal Medallion -->
+                <div class="relative w-36 h-36 sm:w-44 sm:h-44 rounded-full bg-gradient-to-br from-temple-maroon via-temple-darkMaroon to-black border-4 border-temple-gold shadow-[0_0_45px_rgba(212,175,55,0.75)] flex flex-col items-center justify-center p-4 group-hover:scale-105 transition-transform duration-500">
+                    <div class="w-full h-full rounded-full border border-dashed border-temple-lightGold/80 flex flex-col items-center justify-center">
                         <svg class="w-10 h-10 text-temple-gold mb-1" viewBox="0 0 64 64" fill="currentColor">
                             <path d="M32 6C28 14 25 22 32 30C39 22 36 14 32 6ZM18 16C18 24 22 30 30 33C26 24 23 19 18 16ZM46 16C41 19 38 24 34 33C42 30 46 24 46 16ZM10 30C15 36 22 38 29 36C21 31 15 30 10 30ZM54 30C49 30 43 31 35 36C42 38 49 36 54 30ZM20 44H44L40 54H24L20 44Z"/>
                         </svg>
-                        <span class="font-cinzelDec text-temple-lightGold text-lg sm:text-xl tracking-widest">S & V</span>
-                        <span class="font-montserrat text-[10px] uppercase tracking-[0.25em] text-temple-gold mt-1">Tap to Open</span>
+                        <span class="font-cinzelDec text-temple-lightGold text-lg sm:text-xl tracking-widest">S &amp; V</span>
+                        <span class="font-montserrat text-[10px] uppercase tracking-[0.25em] text-temple-gold mt-1">Tap to Unfold</span>
                     </div>
                 </div>
 
-                <div class="mt-6 bg-temple-darkMaroon/90 border border-temple-gold/60 px-6 py-2.5 rounded-full shadow-lg">
+                <div class="mt-6 bg-temple-darkMaroon/95 border border-temple-gold/70 px-6 py-2.5 rounded-full shadow-xl">
                     <p class="font-cinzel text-temple-lightGold text-xs sm:text-sm tracking-[0.2em] uppercase">
-                        <i class="fa-solid fa-hands-praying text-temple-gold mr-2"></i> Shubha Vivaha Invitation
+                        <i class="fa-solid fa-envelope-open-text text-temple-gold mr-2"></i> Open Shubha Vivaha Letter
                     </p>
                 </div>
             </button>
@@ -449,7 +476,7 @@
 
         <!-- =========================================================
              1. HERO SECTION
-        ========================================================= -->
+        ========================================================== -->
         <section id="home" class="relative max-w-6xl mx-auto px-4 pt-4 pb-20 sm:pb-28 text-center text-temple-ivory">
             
             <!-- Counter-Rotating Concentric Sacred Temple Chakra / Mandala Watermarks Behind Title -->
@@ -690,7 +717,7 @@
 
     <!-- =========================================================
          3. EVENT SCHEDULE CARDS (TEMPLE ARCHES)
-    ========================================================= -->
+    ========================================================== -->
     <section id="events" class="reveal-on-scroll py-16 sm:py-24 px-4 silk-emerald-bg text-temple-ivory relative overflow-hidden">
         <!-- Floating Ambient Lotus Watermark -->
         <div class="pointer-events-none absolute -top-12 -right-12 w-64 h-64 opacity-10 animate-spin-slow text-temple-gold">
@@ -848,7 +875,7 @@
                                 <i class="fa-solid fa-compass text-temple-gold mr-1.5"></i> Travel &amp; Landmarks
                             </span>
                             <span id="route-eta-badge" class="text-[11px] font-montserrat font-semibold px-2.5 py-0.5 rounded-full bg-temple-emerald text-temple-lightGold border border-temple-gold/40">
-                                ~12 Mins Drive
+                                ~8 Mins Drive
                             </span>
                         </div>
 
@@ -871,7 +898,7 @@
                                 From Davanagere Railway Station (DVG)
                             </p>
                             <p>
-                                Located just <strong>4.2 km</strong> from the station. Auto-rickshaws and cabs are readily available outside Platform 1 towards Trishul Kalabhavan.
+                                Located just <strong>2.0 km</strong> from the station. Auto-rickshaws and cabs are readily available outside Platform 1 towards Trishul Kalabhavan.
                             </p>
                         </div>
                     </div>
@@ -924,7 +951,7 @@
                         <!-- Bottom Floating Quick-Zoom / Reset View Pill -->
                         <div class="absolute bottom-3 left-3 right-3 z-10 flex flex-wrap items-center justify-between gap-2 pointer-events-none">
                             <span class="bg-temple-ivory/95 text-temple-darkMaroon border border-temple-gold px-3 py-1 rounded-full text-[11px] font-cinzel font-bold shadow-md">
-                                <i class="fa-solid fa-location-crosshairs text-temple-maroon mr-1"></i> 14.4644° N, 75.9218° E
+                                <i class="fa-solid fa-location-crosshairs text-temple-maroon mr-1"></i> 14.4607° N, 75.9278° E
                             </span>
                             <button type="button" onclick="resetVenueMap()" class="pointer-events-auto bg-temple-darkMaroon/95 hover:bg-temple-maroon text-temple-lightGold border border-temple-gold px-3.5 py-1 rounded-full text-[11px] font-cinzel font-bold uppercase tracking-wider shadow-md transition cursor-pointer">
                                 <i class="fa-solid fa-rotate-right text-temple-gold mr-1"></i> Re-center Venue
@@ -1075,6 +1102,9 @@
     <script>
         // Google Apps Script Web App URL connected to your Google Sheet
         const GOOGLE_SHEET_API_URL = "https://script.google.com/macros/s/AKfycby3jcVC6e1QLMHHxY8OnBAOQsfIwRQByUEsCeD87npfFT8sLZIsWeaGn_Fwz4UJYnOr/exec";
+
+        const VENUE_LAT = 14.4607388;
+        const VENUE_LNG = 75.927783;
 
         let liveGuestBlessings = [];
 
@@ -1255,6 +1285,7 @@
 
             setTimeout(() => {
                 curtain.classList.add('curtain-hidden');
+                if (venueMap) venueMap.invalidateSize();
             }, 1400);
         }
 
@@ -1559,7 +1590,7 @@
             requestAnimationFrame(animatePetals);
         }
 
-        // Initialize Leaflet Map for Trishul Kalabhavan, Davanagere (No API Key Required)
+        // Initialize Leaflet Map for Trishul Kalabhavan, Davanagere (Exact Coordinates, No API Key)
         let venueMap = null;
         let venueMarker = null;
 
@@ -1567,13 +1598,10 @@
             const mapContainer = document.getElementById('leaflet-venue-map');
             if (!mapContainer || venueMap) return;
 
-            const lat = 14.4607388;
-            const lng = 75.927783;
-
             venueMap = L.map('leaflet-venue-map', {
                 zoomControl: true,
                 attributionControl: false
-            }).setView([lat, lng], 15);
+            }).setView([VENUE_LAT, VENUE_LNG], 15);
 
             // OpenStreetMap Free Tiles (Zero API key required)
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -1588,14 +1616,21 @@
                 iconAnchor: [20, 20]
             });
 
-            venueMarker = L.marker([lat, lng], { icon: templeIcon }).addTo(venueMap)
+            venueMarker = L.marker([VENUE_LAT, VENUE_LNG], { icon: templeIcon }).addTo(venueMap)
                 .bindPopup("<div style='font-family:Cinzel,serif; color:#5C0A1A; text-align:center;'><b>Trishul Kalabhavan</b><br>Davanagere</div>")
                 .openPopup();
+
+            setTimeout(() => {
+                venueMap.invalidateSize();
+                venueMap.setView([VENUE_LAT, VENUE_LNG], 15);
+            }, 350);
         }
 
         function resetVenueMap() {
             if (venueMap) {
-                venueMap.setView([14.4644, 75.9218], 15, { animate: true });
+                venueMap.invalidateSize();
+                venueMap.setView([VENUE_LAT, VENUE_LNG], 15, { animate: true });
+                if (venueMarker) venueMarker.openPopup();
                 window.showToast("Map re-centered on Trishul Kalabhavan, Davanagere.");
             }
         }
@@ -1605,6 +1640,10 @@
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
                         entry.target.classList.add('is-visible');
+                        if (entry.target.id === 'venue' && venueMap) {
+                            venueMap.invalidateSize();
+                            venueMap.setView([VENUE_LAT, VENUE_LNG], 15);
+                        }
                     }
                 });
             }, { threshold: 0.12 });
@@ -1697,7 +1736,7 @@
 
         const venueRoutes = {
             railway: {
-                eta: "~12 Mins Drive",
+                eta: "~8 Mins Drive",
                 title: "From Davanagere Railway Station (DVG)",
                 desc: "Located just <strong>2.0 km</strong> from the station. Auto-rickshaws and cabs are readily available outside Platform 1 towards Trishul Kalabhavan."
             },
