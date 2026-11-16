@@ -8,6 +8,9 @@
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
+    <!-- Leaflet.js CSS for Interactive Map -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
     <!-- Google Fonts: Cinzel, Playfair Display, Cormorant Garamond, Montserrat -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -137,6 +140,9 @@
         #temple-curtain {
             transition: opacity 1s ease-in-out, visibility 1s ease-in-out;
         }
+        .curtain-hidden {
+            display: none !important;
+        }
         .door-panel {
             transition: transform 1.6s cubic-bezier(0.77, 0, 0.175, 1);
             background: linear-gradient(180deg, #4A0714 0%, #2B030B 100%);
@@ -251,9 +257,9 @@
             transform: translateY(0) scale(1);
         }
 
-        /* Warm Royal Tone for Google Map & Golden Pin Pulse */
+        /* Warm Royal Tone for Map & Golden Pin Pulse */
         .royal-map-filter {
-            filter: sepia(0.24) saturate(1.18) contrast(1.04) brightness(0.97);
+            filter: sepia(0.25) saturate(1.15) contrast(1.05) brightness(0.98);
             transition: filter 0.4s ease;
         }
         .royal-map-container:hover .royal-map-filter {
@@ -443,7 +449,7 @@
 
         <!-- =========================================================
              1. HERO SECTION
-        ========================================================== -->
+        ========================================================= -->
         <section id="home" class="relative max-w-6xl mx-auto px-4 pt-4 pb-20 sm:pb-28 text-center text-temple-ivory">
             
             <!-- Counter-Rotating Concentric Sacred Temple Chakra / Mandala Watermarks Behind Title -->
@@ -499,7 +505,7 @@
                 </div>
             </div>
 
-            <!-- Temple Arch Frame with Couple Names & Lamps -->
+            <!-- Temple Arch Frame with Couple Portrait & Details -->
             <div class="relative z-10 max-w-3xl mx-auto mt-6 p-6 sm:p-12 zari-border-dark gold-shimmer-card rounded-t-[180px] sm:rounded-t-[240px] rounded-b-3xl bg-temple-darkMaroon/75 backdrop-blur-sm">
                 
                 <!-- Top Temple Kalash Emblem -->
@@ -521,6 +527,15 @@
                     <span class="block sm:inline font-playfair italic text-3xl sm:text-5xl text-temple-lightGold mx-2 my-1">&amp;</span>
                     Varun
                 </h1>
+
+                <!-- Painted Bride & Groom Cameo Portrait -->
+                <div class="my-6 flex justify-center">
+                    <div class="relative w-64 h-64 sm:w-80 sm:h-80 rounded-t-[140px] rounded-b-2xl p-2 bg-gradient-to-b from-temple-gold via-yellow-500 to-temple-gold shadow-[0_10px_35px_rgba(0,0,0,0.5)]">
+                        <div class="relative w-full h-full rounded-t-[132px] rounded-b-xl overflow-hidden bg-temple-darkMaroon border-2 border-temple-darkMaroon flex items-center justify-center">
+                            <img src="https://images.googleusercontent.com/image_generation_content/16995375702025408980" alt="Sowmya & Varun Painted Portrait" class="w-full h-full object-cover">
+                        </div>
+                    </div>
+                </div>
 
                 <p class="font-cormorant text-lg sm:text-2xl text-temple-ivory/95 max-w-xl mx-auto leading-relaxed">
                     Together with their families, we joyfully invite you to celebrate our sacred union
@@ -675,7 +690,7 @@
 
     <!-- =========================================================
          3. EVENT SCHEDULE CARDS (TEMPLE ARCHES)
-    ========================================================== -->
+    ========================================================= -->
     <section id="events" class="reveal-on-scroll py-16 sm:py-24 px-4 silk-emerald-bg text-temple-ivory relative overflow-hidden">
         <!-- Floating Ambient Lotus Watermark -->
         <div class="pointer-events-none absolute -top-12 -right-12 w-64 h-64 opacity-10 animate-spin-slow text-temple-gold">
@@ -873,7 +888,7 @@
                 </div>
             </div>
 
-            <!-- Right Ornate Temple-Arch & Gold-Filigree Framed Interactive Map -->
+            <!-- Right Ornate Temple-Arch & Gold-Filigree Framed Interactive Leaflet Map -->
             <div class="lg:col-span-7 silk-maroon-bg p-5 sm:p-8 flex flex-col justify-between relative overflow-hidden">
                 <!-- Subtle Gold Filigree Corner Ornaments -->
                 <div class="absolute top-3 left-3 text-temple-gold/60 text-lg pointer-events-none">╔═ ✦</div>
@@ -890,17 +905,10 @@
                 <div class="royal-map-container relative flex-1 min-h-[360px] sm:min-h-[430px] rounded-t-[130px] sm:rounded-t-[170px] rounded-b-2xl p-2 bg-gradient-to-b from-temple-gold via-yellow-500 to-temple-gold shadow-[0_15px_40px_rgba(0,0,0,0.55)]">
                     <div class="relative w-full h-full min-h-[344px] sm:min-h-[414px] rounded-t-[122px] sm:rounded-t-[162px] rounded-b-xl overflow-hidden bg-temple-sandal border-2 border-temple-darkMaroon">
                         
-                        <!-- Warm-Toned Stylized Google Map Embed -->
-                        <iframe 
-                            id="venue-google-map"
-                            title="Trishul Kalabhavan Davanagere Interactive Map"
-                            class="w-full h-full min-h-[344px] sm:min-h-[414px] border-0 royal-map-filter"
-                            loading="lazy"
-                            referrerpolicy="no-referrer-when-downgrade"
-                            src="https://maps.google.com/maps?q=Trishul%20Kalabhavan%20Davanagere%20Karnataka&t=&z=15&ie=UTF8&iwloc=&output=embed">
-                        </iframe>
+                        <!-- Interactive Leaflet Map Container (Zero API Key Watermark) -->
+                        <div id="leaflet-venue-map" class="w-full h-full min-h-[344px] sm:min-h-[414px] royal-map-filter z-0"></div>
 
-                        <!-- Subtle Golden Pulse Pin & Venue Badge Overlay (Non-blocking pointer-events-none) -->
+                        <!-- Subtle Golden Pulse Pin & Venue Badge Overlay -->
                         <div class="absolute top-4 left-1/2 -translate-x-1/2 z-10 pointer-events-none flex flex-col items-center">
                             <div class="bg-temple-darkMaroon/95 backdrop-blur-sm text-temple-lightGold border border-temple-gold px-4 py-1.5 rounded-full shadow-xl flex items-center gap-2.5 whitespace-nowrap">
                                 <span class="relative flex h-3 w-3">
@@ -1049,7 +1057,7 @@
     </footer>
 
     <!-- =========================================================
-         CUSTOM TOAST NOTIFICATION BANNER (NO ALERT())
+         CUSTOM TOAST NOTIFICATION BANNER
     ========================================================== -->
     <div id="toast-banner" class="fixed bottom-5 right-5 z-50 transform translate-y-24 opacity-0 transition-all duration-300 pointer-events-none max-w-sm">
         <div class="bg-temple-darkMaroon text-temple-lightGold border-2 border-temple-gold rounded-2xl px-5 py-3.5 shadow-2xl flex items-center gap-3">
@@ -1058,8 +1066,11 @@
         </div>
     </div>
 
+    <!-- Leaflet.js JS for Interactive Map -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
     <!-- =========================================================
-         JAVASCRIPT LOGIC: DOORS, AUDIO, PETALS, COUNTDOWN, BLESSINGS
+         JAVASCRIPT LOGIC
     ========================================================== -->
     <script>
         // Google Apps Script Web App URL connected to your Google Sheet
@@ -1124,7 +1135,6 @@
             });
         }
 
-        // Fetch existing blessings from Google Sheets via GET
         async function fetchBlessingsFromSheet() {
             try {
                 const response = await fetch(GOOGLE_SHEET_API_URL, {
@@ -1151,11 +1161,9 @@
             }
         }
 
-        // Render initial empty state, then sync live blessings from Google Sheet
         renderBlessingsWall();
         fetchBlessingsFromSheet();
 
-        // Submit new blessing to Google Sheet via POST (with optimistic UI update & re-sync)
         async function handleBlessingSubmit(e) {
             e.preventDefault();
             const nameInput = document.getElementById('guest-name');
@@ -1174,7 +1182,6 @@
                 submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin text-temple-gold"></i> Saving Blessing...';
             }
 
-            // Optimistically prepend new blessing immediately
             liveGuestBlessings.unshift({
                 id: 'optimistic-' + Date.now(),
                 name: name,
@@ -1184,7 +1191,6 @@
             });
             renderBlessingsWall();
 
-            // Play celebratory temple chime if ambience is enabled
             if (window.isAudioPlaying && window.audioCtx && window.playTempleChime) {
                 window.playTempleChime(window.audioCtx, 659.25, 0);
                 window.playTempleChime(window.audioCtx, 1046.50, 0.2);
@@ -1209,7 +1215,6 @@
                     })
                 });
 
-                // Re-sync from Google Sheet after a brief delay so all visitors see the latest rows
                 setTimeout(() => {
                     fetchBlessingsFromSheet();
                 }, 1800);
@@ -1224,7 +1229,6 @@
             }
         }
 
-        // 1. Toast Message Helper (Replaces alert())
         let toastTimeout;
         window.showToast = function(msg) {
             const banner = document.getElementById('toast-banner');
@@ -1237,28 +1241,23 @@
             }, 4000);
         };
 
-        // 2. Temple Doors Entrance Animation & Auto-Start Audio
         function openTempleDoors() {
             const curtain = document.getElementById('temple-curtain');
             curtain.classList.add('doors-open');
             
-            // Start gentle auspicious temple drone/chime on user interaction
             if (!window.isAudioPlaying) {
                 toggleTempleAudio(true);
             }
 
-            // Celebrate opening with an auspicious flower & akshata shower
             setTimeout(() => {
                 triggerFlowerShower();
             }, 450);
 
             setTimeout(() => {
-                curtain.style.opacity = '0';
-                curtain.style.visibility = 'hidden';
+                curtain.classList.add('curtain-hidden');
             }, 1400);
         }
 
-        // Interactive Hanging Temple Bell Ring Effect
         function ringBrassBell(btnEl, freq = 880) {
             if (btnEl) {
                 btnEl.classList.remove('bell-ringing');
@@ -1280,7 +1279,6 @@
             }
         }
 
-        // 3. Web Audio API: Auspicious South Indian Tanpura Drone & Temple Bell Chimes
         window.audioCtx = null;
         window.isAudioPlaying = false;
         let droneNodes = [];
@@ -1329,7 +1327,6 @@
                 if (!window.audioCtx) window.audioCtx = new AudioContext();
                 if (window.audioCtx.state === 'suspended') window.audioCtx.resume();
 
-                // Sa - Pa - Sa (C3, G3, C4) warm Tanpura drone
                 const frequencies = [130.81, 196.00, 261.63];
                 frequencies.forEach((freq) => {
                     const osc = window.audioCtx.createOscillator();
@@ -1353,7 +1350,6 @@
                     droneNodes.push(osc);
                 });
 
-                // Auspicious Carnatic Raga Mohanam / Kalyani gentle bell notes (Sa, Re, Ga, Pa, Dha)
                 const ragaNotes = [523.25, 587.33, 659.25, 783.99, 880.00, 1046.50];
                 window.playTempleChime(window.audioCtx, 523.25, 0.2);
                 window.playTempleChime(window.audioCtx, 783.99, 0.9);
@@ -1373,7 +1369,6 @@
             }
         }
 
-        // 4. Live Countdown Timer to Subha Muhurtham on December 30, 2026 at 09:00 AM IST
         function updateCountdown() {
             const targetDate = new Date('2026-12-30T09:00:00+05:30').getTime();
             const now = new Date().getTime();
@@ -1406,7 +1401,6 @@
         setInterval(updateCountdown, 1000);
         updateCountdown();
 
-        // 5. Floating Marigold, Jasmine Petals & Golden Diya Embers Canvas Animation
         const canvas = document.getElementById('petals-canvas');
         const ctx = canvas.getContext('2d');
         let petals = [];
@@ -1541,7 +1535,6 @@
             window.showToast('Showering sacred marigold, jasmine & Akshata blessings upon Sowmya & Varun!');
         }
 
-        // Subtle tap-anywhere sparkle burst on background clicks
         document.addEventListener('click', (e) => {
             if (e.target.closest('button, a, input, textarea, iframe')) return;
             spawnBurstParticles(e.clientX, e.clientY, 10);
@@ -1566,7 +1559,47 @@
             requestAnimationFrame(animatePetals);
         }
 
-        // Scroll Reveal Observer & 3D Interactive Tilt Cards
+        // Initialize Leaflet Map for Trishul Kalabhavan, Davanagere (No API Key Required)
+        let venueMap = null;
+        let venueMarker = null;
+
+        function initLeafletMap() {
+            const mapContainer = document.getElementById('leaflet-venue-map');
+            if (!mapContainer || venueMap) return;
+
+            const lat = 14.4644;
+            const lng = 75.9218;
+
+            venueMap = L.map('leaflet-venue-map', {
+                zoomControl: true,
+                attributionControl: false
+            }).setView([lat, lng], 15);
+
+            // OpenStreetMap Free Tiles (Zero API key required)
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19,
+                subdomains: ['a', 'b', 'c']
+            }).addTo(venueMap);
+
+            const templeIcon = L.divIcon({
+                className: 'custom-temple-pin',
+                html: `<div style="background: #5C0A1A; border: 2px solid #D4AF37; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 16px rgba(0,0,0,0.5);"><i class="fa-solid fa-gopuram" style="color: #FFD700; font-size: 18px;"></i></div>`,
+                iconSize: [40, 40],
+                iconAnchor: [20, 20]
+            });
+
+            venueMarker = L.marker([lat, lng], { icon: templeIcon }).addTo(venueMap)
+                .bindPopup("<div style='font-family:Cinzel,serif; color:#5C0A1A; text-align:center;'><b>Trishul Kalabhavan</b><br>Davanagere</div>")
+                .openPopup();
+        }
+
+        function resetVenueMap() {
+            if (venueMap) {
+                venueMap.setView([14.4644, 75.9218], 15, { animate: true });
+                window.showToast("Map re-centered on Trishul Kalabhavan, Davanagere.");
+            }
+        }
+
         function initScrollAndTiltEffects() {
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
@@ -1595,9 +1628,9 @@
             initPetals();
             animatePetals();
             initScrollAndTiltEffects();
+            initLeafletMap();
         };
 
-        // 6. Calendar (.ics) File Generator for Reception & Muhurtham
         function downloadCalendarEvent(type) {
             let title, start, end, desc;
             if (type === 'reception') {
@@ -1639,7 +1672,6 @@
             window.showToast(`${title} added to your calendar downloads!`);
         }
 
-        // 8. Copy Utilities (Using document.execCommand('copy') for iFrame safety)
         function copyTextFallback(text, successMessage) {
             const textarea = document.createElement('textarea');
             textarea.value = text;
@@ -1663,7 +1695,6 @@
             );
         }
 
-        // Interactive Venue Route/Landmark Switcher & Map Re-center
         const venueRoutes = {
             railway: {
                 eta: "~12 Mins Drive",
@@ -1700,14 +1731,6 @@
             if (activeBtn) {
                 activeBtn.classList.remove('bg-white/80', 'text-temple-maroon', 'border-temple-gold/50');
                 activeBtn.classList.add('bg-temple-maroon', 'text-temple-lightGold', 'border-temple-gold');
-            }
-        }
-
-        function resetVenueMap() {
-            const mapFrame = document.getElementById('venue-google-map');
-            if (mapFrame) {
-                mapFrame.src = "https://maps.google.com/maps?q=Trishul%20Kalabhavan%20Davanagere%20Karnataka&t=&z=15&ie=UTF8&iwloc=&output=embed";
-                window.showToast("Map re-centered on Trishul Kalabhavan, Davanagere.");
             }
         }
 
