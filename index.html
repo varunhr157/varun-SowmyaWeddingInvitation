@@ -275,15 +275,6 @@
             animation: spinReverseSlow 60s linear infinite;
         }
 
-        /* Equalizer Bars for Music Button */
-        @keyframes eqBar {
-            0%, 100% { height: 4px; }
-            50% { height: 14px; }
-        }
-        .eq-bar-1 { animation: eqBar 0.7s ease-in-out infinite; }
-        .eq-bar-2 { animation: eqBar 0.5s ease-in-out 0.2s infinite; }
-        .eq-bar-3 { animation: eqBar 0.8s ease-in-out 0.4s infinite; }
-
         /* Interactive 3D Tilt Cards */
         .tilt-card {
             transform-style: preserve-3d;
@@ -347,11 +338,6 @@
     </style>
 </head>
 <body class="font-cormorant antialiased selection:bg-temple-gold selection:text-temple-darkMaroon">
-
-    <!-- =========================================================
-         MYSTIC DAWNS IN DELHI (DIRECT RELATIVE MP3 FROM GITHUB REPO)
-    ========================================================== -->
-    <audio id="wedding-bgm" src="./mystic-dawns-in-delhi.mp3" loop preload="auto"></audio>
 
     <!-- Floating Marigold & Jasmine Petals Canvas -->
     <canvas id="petals-canvas"></canvas>
@@ -485,14 +471,9 @@
 
             <!-- Right Controls: Ambient Audio & Quick Blessings Link -->
             <div class="flex items-center gap-2 sm:gap-3">
-                <button id="audio-toggle-btn" onclick="toggleTempleAudio()" class="flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-temple-gold/70 bg-temple-maroon hover:bg-temple-gold hover:text-temple-darkMaroon text-temple-lightGold transition-all text-xs font-montserrat cursor-pointer" title="Toggle Mystic Dawns In Delhi">
-                    <i id="audio-icon" class="fa-solid fa-music"></i>
-                    <span id="audio-eq" class="hidden items-end gap-0.5 h-3.5">
-                        <span class="w-0.5 bg-temple-brightGold eq-bar-1"></span>
-                        <span class="w-0.5 bg-temple-brightGold eq-bar-2"></span>
-                        <span class="w-0.5 bg-temple-brightGold eq-bar-3"></span>
-                    </span>
-                    <span id="audio-label">Play Music</span>
+                <button id="audio-toggle-btn" onclick="toggleTempleAudio()" class="flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-temple-gold/70 bg-temple-maroon hover:bg-temple-gold hover:text-temple-darkMaroon text-temple-lightGold transition-all text-xs font-montserrat cursor-pointer" title="Toggle Auspicious Temple Drone & Chimes">
+                    <i id="audio-icon" class="fa-solid fa-volume-xmark"></i>
+                    <span id="audio-label">Play Ambience</span>
                 </button>
                 <a href="#blessings" class="px-3.5 py-1.5 rounded-full bg-gradient-to-r from-temple-gold to-yellow-500 text-temple-darkMaroon font-cinzel font-bold text-xs tracking-wider uppercase shadow hover:brightness-110 transition">
                     Send Wishes
@@ -1382,6 +1363,11 @@
             saveCachedBlessings(liveGuestBlessings);
             renderBlessingsWall();
 
+            if (window.audioCtx && window.playTempleChime) {
+                window.playTempleChime(window.audioCtx, 659.25, 0);
+                window.playTempleChime(window.audioCtx, 1046.50, 0.2);
+            }
+
             nameInput.value = '';
             relationInput.value = '';
             blessingInput.value = '';
@@ -1423,97 +1409,13 @@
             clearTimeout(toastTimeout);
             toastTimeout = setTimeout(() => {
                 banner.classList.add('translate-y-24', 'opacity-0');
-            }, 4500);
+            }, 4000);
         };
-
-        /* =========================================================
-           MYSTIC DAWNS IN DELHI AUDIO CONTROLLER (ROBUST PLAYBACK)
-        ========================================================== */
-        window.isAudioPlaying = false;
-        const bgmAudio = document.getElementById('wedding-bgm');
-
-        function setAudioUI(playing) {
-            const btnIcon = document.getElementById('audio-icon');
-            const btnEq = document.getElementById('audio-eq');
-            const btnLabel = document.getElementById('audio-label');
-
-            if (playing) {
-                if (btnIcon) btnIcon.classList.add('hidden');
-                if (btnEq) {
-                    btnEq.classList.remove('hidden');
-                    btnEq.classList.add('flex');
-                }
-                if (btnLabel) btnLabel.textContent = 'Music On';
-            } else {
-                if (btnIcon) btnIcon.classList.remove('hidden');
-                if (btnEq) {
-                    btnEq.classList.add('hidden');
-                    btnEq.classList.remove('flex');
-                }
-                if (btnLabel) btnLabel.textContent = 'Play Music';
-            }
-        }
-
-        if (bgmAudio) {
-            bgmAudio.addEventListener('playing', () => {
-                window.isAudioPlaying = true;
-                setAudioUI(true);
-            });
-            bgmAudio.addEventListener('pause', () => {
-                window.isAudioPlaying = false;
-                setAudioUI(false);
-            });
-            bgmAudio.addEventListener('error', (e) => {
-                console.error('Audio file error:', bgmAudio.error);
-                window.showToast('Audio file could not load. Please check mystic-dawns-in-delhi.mp3.');
-            });
-        }
-
-        function startBgmPlayback(showSuccessToast = false) {
-            if (!bgmAudio) return;
-            bgmAudio.muted = false;
-            bgmAudio.volume = 0.85;
-
-            if (bgmAudio.readyState === 0) {
-                bgmAudio.load();
-            }
-
-            const playPromise = bgmAudio.play();
-            if (playPromise !== undefined) {
-                playPromise.then(() => {
-                    window.isAudioPlaying = true;
-                    setAudioUI(true);
-                    if (showSuccessToast) {
-                        window.showToast('Playing "Mystic Dawns In Delhi".');
-                    }
-                }).catch((err) => {
-                    console.warn('Autoplay deferred until direct tap:', err);
-                    if (showSuccessToast) {
-                        window.showToast('Tap "Play Music" at the top right to start audio.');
-                    }
-                });
-            }
-        }
-
-        function toggleTempleAudio(forceStart = false) {
-            if (!bgmAudio) return;
-
-            if (window.isAudioPlaying && !forceStart) {
-                bgmAudio.pause();
-                window.isAudioPlaying = false;
-                setAudioUI(false);
-                window.showToast('Music paused.');
-                return;
-            }
-
-            startBgmPlayback(!forceStart);
-        }
 
         let isOpeningEnvelope = false;
         function openTempleDoors() {
-            // Always trigger audio directly inside the user click handler
             if (!window.isAudioPlaying) {
-                startBgmPlayback(false);
+                toggleTempleAudio(true);
             }
 
             if (isOpeningEnvelope) return;
@@ -1548,23 +1450,106 @@
                 const AudioContext = window.AudioContext || window.webkitAudioContext;
                 if (!window.audioCtx) window.audioCtx = new AudioContext();
                 if (window.audioCtx.state === 'suspended') window.audioCtx.resume();
-                const now = window.audioCtx.currentTime;
-                const osc = window.audioCtx.createOscillator();
-                const gain = window.audioCtx.createGain();
-                osc.type = 'sine';
-                osc.frequency.setValueAtTime(freq, now);
-                gain.gain.setValueAtTime(0.001, now);
-                gain.gain.exponentialRampToValueAtTime(0.06, now + 0.02);
-                gain.gain.exponentialRampToValueAtTime(0.0001, now + 1.8);
-                osc.connect(gain);
-                gain.connect(window.audioCtx.destination);
-                osc.start(now);
-                osc.stop(now + 1.9);
+                window.playTempleChime(window.audioCtx, freq, 0);
+                window.playTempleChime(window.audioCtx, freq * 1.5, 0.08);
             } catch (e) {}
 
             if (btnEl) {
                 const rect = btnEl.getBoundingClientRect();
                 spawnBurstParticles(rect.left + rect.width / 2, rect.bottom, 18);
+            }
+        }
+
+        /* =========================================================
+           ORIGINAL WEB AUDIO DRONE & TEMPLE CHIMES ENGINE
+        ========================================================== */
+        window.audioCtx = null;
+        window.isAudioPlaying = false;
+        let droneNodes = [];
+        let chimeInterval = null;
+
+        window.playTempleChime = function(ctx, freq, delay = 0) {
+            const now = ctx.currentTime + delay;
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(freq, now);
+
+            gain.gain.setValueAtTime(0.0001, now);
+            gain.gain.exponentialRampToValueAtTime(0.06, now + 0.04);
+            gain.gain.exponentialRampToValueAtTime(0.0001, now + 2.8);
+
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+
+            osc.start(now);
+            osc.stop(now + 2.9);
+        };
+
+        function toggleTempleAudio(forceStart = false) {
+            const btnIcon = document.getElementById('audio-icon');
+            const btnLabel = document.getElementById('audio-label');
+
+            if (window.isAudioPlaying && !forceStart) {
+                droneNodes.forEach(node => {
+                    try { node.stop(); } catch (e) {}
+                });
+                droneNodes = [];
+                clearInterval(chimeInterval);
+                window.isAudioPlaying = false;
+                if (btnIcon) btnIcon.className = 'fa-solid fa-volume-xmark';
+                if (btnLabel) btnLabel.textContent = 'Play Ambience';
+                window.showToast('Temple ambience paused.');
+                return;
+            }
+
+            if (window.isAudioPlaying) return;
+
+            try {
+                const AudioContext = window.AudioContext || window.webkitAudioContext;
+                if (!window.audioCtx) window.audioCtx = new AudioContext();
+                if (window.audioCtx.state === 'suspended') window.audioCtx.resume();
+
+                const frequencies = [130.81, 196.00, 261.63];
+                frequencies.forEach((freq) => {
+                    const osc = window.audioCtx.createOscillator();
+                    const filter = window.audioCtx.createBiquadFilter();
+                    const gain = window.audioCtx.createGain();
+
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(freq, window.audioCtx.currentTime);
+
+                    filter.type = 'lowpass';
+                    filter.frequency.setValueAtTime(420, window.audioCtx.currentTime);
+
+                    gain.gain.setValueAtTime(0.001, window.audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.025, window.audioCtx.currentTime + 1.5);
+
+                    osc.connect(filter);
+                    filter.connect(gain);
+                    gain.connect(window.audioCtx.destination);
+
+                    osc.start();
+                    droneNodes.push(osc);
+                });
+
+                const ragaNotes = [523.25, 587.33, 659.25, 783.99, 880.00, 1046.50];
+                window.playTempleChime(window.audioCtx, 523.25, 0.2);
+                window.playTempleChime(window.audioCtx, 783.99, 0.9);
+
+                chimeInterval = setInterval(() => {
+                    if (!window.isAudioPlaying) return;
+                    const note = ragaNotes[Math.floor(Math.random() * ragaNotes.length)];
+                    window.playTempleChime(window.audioCtx, note);
+                }, 4200);
+
+                window.isAudioPlaying = true;
+                if (btnIcon) btnIcon.className = 'fa-solid fa-volume-high text-temple-gold';
+                if (btnLabel) btnLabel.textContent = 'Ambience On';
+                if (!forceStart) window.showToast('Auspicious Tanpura & temple chimes playing.');
+            } catch (err) {
+                console.warn('Audio playback blocked until interaction:', err);
             }
         }
 
@@ -1726,6 +1711,11 @@
                 [canvas.width * 0.8, canvas.height * 0.25]
             ];
             origins.forEach(([ox, oy]) => spawnBurstParticles(ox, oy, 26));
+
+            if (window.audioCtx && window.playTempleChime) {
+                window.playTempleChime(window.audioCtx, 783.99, 0);
+                window.playTempleChime(window.audioCtx, 1046.50, 0.15);
+            }
             window.showToast('Showering sacred marigold & jasmine blessings upon Sowmya & Varun!');
         }
 
