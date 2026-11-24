@@ -349,14 +349,13 @@
 <body class="font-cormorant antialiased selection:bg-temple-gold selection:text-temple-darkMaroon">
 
     <!-- =========================================================
-         REAL STUDIO AUDIO PLAYER (VEENA, TABLA & FLUTE)
-         1. Looks for your local 'wedding-music.mp3' first
-         2. Automatically streams real studio classical instrumental if not found
+         MYSTIC DAWNS IN DELHI (SITAR & TABLA COLLABORATION)
+         Uses local 'mystic-dawns-in-delhi.mp3' if present, or streams directly from StockTune CDN
     ========================================================== -->
-    <audio id="wedding-bgm" loop preload="auto" crossorigin="anonymous">
-        <source src="wedding-music.mp3" type="audio/mpeg">
-        <source src="https://cdn.pixabay.com/download/audio/2022/10/25/audio_946b0939c8.mp3?filename=indian-flute-and-tabla-124008.mp3" type="audio/mpeg">
-        <source src="https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=meditation-indian-flute-112649.mp3" type="audio/mpeg">
+    <audio id="wedding-bgm" loop preload="auto">
+        <source src="mystic-dawns-in-delhi.mp3" type="audio/mpeg">
+        <source src="https://cdn.stocktune.com/free-music/mystic-dawns-in-delhi-285823-168505.mp3" type="audio/mpeg">
+        <source src="https://stocktune.com/free-music/mystic-dawns-in-delhi-285823-168505.mp3" type="audio/mpeg">
     </audio>
 
     <!-- Floating Marigold & Jasmine Petals Canvas -->
@@ -491,7 +490,7 @@
 
             <!-- Right Controls: Ambient Audio & Quick Blessings Link -->
             <div class="flex items-center gap-2 sm:gap-3">
-                <button id="audio-toggle-btn" onclick="toggleTempleAudio()" class="flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-temple-gold/70 bg-temple-maroon hover:bg-temple-gold hover:text-temple-darkMaroon text-temple-lightGold transition-all text-xs font-montserrat cursor-pointer" title="Toggle Veena, Tabla & Flute Music">
+                <button id="audio-toggle-btn" onclick="toggleTempleAudio()" class="flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-temple-gold/70 bg-temple-maroon hover:bg-temple-gold hover:text-temple-darkMaroon text-temple-lightGold transition-all text-xs font-montserrat cursor-pointer" title="Toggle Mystic Dawns In Delhi (Sitar & Tabla)">
                     <i id="audio-icon" class="fa-solid fa-music"></i>
                     <span id="audio-eq" class="hidden items-end gap-0.5 h-3.5">
                         <span class="w-0.5 bg-temple-brightGold eq-bar-1"></span>
@@ -1140,14 +1139,20 @@
                         <h3 class="font-cinzel text-lg sm:text-xl text-temple-lightGold tracking-wider uppercase flex items-center gap-2">
                             <span class="text-temple-gold">❀</span> Sacred Blessings Wall
                         </h3>
-                        <span id="blessings-count" class="text-xs font-montserrat px-3 py-1 rounded-full bg-temple-darkMaroon border border-temple-gold/40 text-temple-gold">
-                            0 Blessings
-                        </span>
+                        <div class="flex items-center gap-2">
+                            <button type="button" onclick="fetchBlessingsFromSheet(true)" title="Refresh Blessings"
+                                class="text-xs font-montserrat px-2.5 py-1 rounded-full bg-temple-darkMaroon hover:bg-temple-maroon border border-temple-gold/40 text-temple-lightGold transition cursor-pointer">
+                                <i class="fa-solid fa-rotate"></i>
+                            </button>
+                            <span id="blessings-count" class="text-xs font-montserrat px-3 py-1 rounded-full bg-temple-darkMaroon border border-temple-gold/40 text-temple-gold">
+                                0 Blessings
+                            </span>
+                        </div>
                     </div>
 
                     <!-- Scrollable Blessings Cards Grid -->
                     <div id="blessings-wall" class="grid grid-cols-1 sm:grid-cols-2 gap-4 max-h-[540px] overflow-y-auto pr-1">
-                        <!-- Live blessings loaded directly from Google Sheet -->
+                        <!-- Live blessings loaded from Google Sheet & local cache -->
                     </div>
                 </div>
 
@@ -1200,11 +1205,44 @@
     <script>
         // Google Apps Script Web App URL connected to your Google Sheet
         const GOOGLE_SHEET_API_URL = "https://script.google.com/macros/s/AKfycby3jcVC6e1QLMHHxY8OnBAOQsfIwRQByUEsCeD87npfFT8sLZIsWeaGn_Fwz4UJYnOr/exec";
+        const LOCAL_BLESSINGS_KEY = "sowmya_varun_blessings_cache_v1";
 
         const VENUE_LAT = 14.4607388;
         const VENUE_LNG = 75.927783;
 
-        let liveGuestBlessings = [];
+        const defaultSeedBlessings = [
+            {
+                id: 'seed-1',
+                name: 'Both Families & Elders',
+                relation: 'Shubha Ashirvada',
+                blessing: 'May Lord Ganesha and Goddess Lakshmi shower eternal happiness, health, and harmony upon Sowmya & Varun.'
+            },
+            {
+                id: 'seed-2',
+                name: 'Friends of Bride & Groom',
+                relation: 'Davanagere & Bengaluru',
+                blessing: 'Wishing our favorite couple a lifetime of laughter, endless adventures, and timeless love!'
+            }
+        ];
+
+        function loadCachedBlessings() {
+            try {
+                const raw = localStorage.getItem(LOCAL_BLESSINGS_KEY);
+                if (raw) {
+                    const parsed = JSON.parse(raw);
+                    if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+                }
+            } catch (e) {}
+            return [...defaultSeedBlessings];
+        }
+
+        function saveCachedBlessings(list) {
+            try {
+                localStorage.setItem(LOCAL_BLESSINGS_KEY, JSON.stringify(list));
+            } catch (e) {}
+        }
+
+        let liveGuestBlessings = loadCachedBlessings();
 
         function createBlessingCardElement(item) {
             const card = document.createElement('div');
@@ -1243,54 +1281,77 @@
                 countEl.textContent = `${count} ${count === 1 ? 'Blessing' : 'Blessings'}`;
             }
 
-            if (liveGuestBlessings.length === 0) {
-                const emptyState = document.createElement('div');
-                emptyState.className = "sm:col-span-2 p-8 sm:p-10 rounded-2xl bg-temple-darkMaroon/80 border border-dashed border-temple-gold/50 text-center flex flex-col items-center justify-center";
-                emptyState.innerHTML = `
-                    <div class="w-12 h-12 rounded-full bg-temple-maroon border border-temple-gold/60 flex items-center justify-center text-temple-gold mb-3">
-                        <i class="fa-solid fa-hands-praying text-lg"></i>
-                    </div>
-                    <p class="font-cormorant italic text-xl sm:text-2xl text-temple-lightGold leading-relaxed">
-                        No blessings posted yet — be the first to shower Sowmya &amp; Varun with your wishes!
-                    </p>
-                `;
-                wall.appendChild(emptyState);
-                return;
-            }
-
             liveGuestBlessings.forEach(item => {
                 wall.appendChild(createBlessingCardElement(item));
             });
         }
 
-        async function fetchBlessingsFromSheet() {
+        function normalizeSheetRow(row, index) {
+            if (!row || typeof row !== 'object') return null;
+            // Support case-insensitive keys from Google Sheets headers
+            const lookup = {};
+            Object.keys(row).forEach(k => {
+                lookup[k.toLowerCase().trim()] = row[k];
+            });
+
+            const name = String(lookup.name || lookup.guest || lookup.sender || '').trim();
+            const blessing = String(lookup.message || lookup.blessing || lookup.wish || lookup.wishes || '').trim();
+            const relation = String(lookup.relation || lookup.city || lookup.from || 'Warm Wishes').trim();
+
+            if (!name && !blessing) return null;
+            return {
+                id: 'sheet-' + index,
+                name: name || 'Well Wisher',
+                relation: relation || 'Warm Wishes',
+                blessing: blessing
+            };
+        }
+
+        async function fetchBlessingsFromSheet(manualTrigger = false) {
             try {
-                const response = await fetch(GOOGLE_SHEET_API_URL, {
+                const urlWithCacheBust = `${GOOGLE_SHEET_API_URL}?t=${Date.now()}`;
+                const response = await fetch(urlWithCacheBust, {
                     method: 'GET',
                     redirect: 'follow'
                 });
-                if (!response.ok) throw new Error('Network response was not ok');
-                const rows = await response.json();
+                if (!response.ok) throw new Error('HTTP status ' + response.status);
+                const payload = await response.json();
 
-                if (Array.isArray(rows)) {
-                    liveGuestBlessings = rows
-                        .filter(row => row && (row.name || row.message))
-                        .map((row, index) => ({
-                            id: 'sheet-' + index,
-                            name: String(row.name || 'Well Wisher').trim(),
-                            relation: String(row.relation || 'Warm Wishes').trim(),
-                            blessing: String(row.message || '').trim()
-                        }));
+                // Support direct array or wrapped array ({ data: [...] } / { records: [...] })
+                const rawRows = Array.isArray(payload)
+                    ? payload
+                    : (Array.isArray(payload?.data) ? payload.data : (Array.isArray(payload?.records) ? payload.records : []));
+
+                const normalized = rawRows
+                    .map((row, idx) => normalizeSheetRow(row, idx))
+                    .filter(Boolean);
+
+                if (normalized.length > 0) {
+                    // Merge any locally saved optimistic items not yet in sheet
+                    const sheetKeys = new Set(normalized.map(i => `${i.name.toLowerCase()}|${i.blessing.toLowerCase()}`));
+                    const localOnly = liveGuestBlessings.filter(item =>
+                        !item.id.startsWith('seed-') &&
+                        !sheetKeys.has(`${item.name.toLowerCase()}|${item.blessing.toLowerCase()}`)
+                    );
+                    liveGuestBlessings = [...localOnly, ...normalized];
+                    saveCachedBlessings(liveGuestBlessings);
                     renderBlessingsWall();
                 }
+
+                if (manualTrigger) {
+                    window.showToast('Blessings wall refreshed.');
+                }
             } catch (err) {
-                console.warn("Could not load blessings from Google Sheet yet:", err);
+                console.warn("Using cached blessings while Google Sheet syncs:", err);
                 renderBlessingsWall();
+                if (manualTrigger) {
+                    window.showToast('Showing saved blessings on wall.');
+                }
             }
         }
 
         renderBlessingsWall();
-        fetchBlessingsFromSheet();
+        fetchBlessingsFromSheet(false);
 
         function insertBlessingPreset(text) {
             const box = document.getElementById('guest-blessing');
@@ -1318,13 +1379,16 @@
                 submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin text-temple-gold"></i> Saving Blessing...';
             }
 
+            // Remove initial seed placeholders once real guest blessings are added
+            liveGuestBlessings = liveGuestBlessings.filter(item => !item.id.startsWith('seed-'));
+
             liveGuestBlessings.unshift({
-                id: 'optimistic-' + Date.now(),
+                id: 'guest-' + Date.now(),
                 name: name,
                 relation: relation,
-                blessing: message,
-                isNew: true
+                blessing: message
             });
+            saveCachedBlessings(liveGuestBlessings);
             renderBlessingsWall();
 
             nameInput.value = '';
@@ -1347,11 +1411,10 @@
                 });
 
                 setTimeout(() => {
-                    fetchBlessingsFromSheet();
-                }, 1800);
+                    fetchBlessingsFromSheet(false);
+                }, 2000);
             } catch (err) {
                 console.error("Failed to post blessing to Google Sheet:", err);
-                window.showToast('Blessing shown on wall, though network sync had a hiccup.');
             } finally {
                 if (submitBtn) {
                     submitBtn.disabled = false;
@@ -1431,7 +1494,7 @@
         }
 
         /* =========================================================
-           REAL STUDIO AUDIO CONTROLLER (VEENA, TABLA & FLUTE)
+           MYSTIC DAWNS IN DELHI AUDIO CONTROLLER
         ========================================================== */
         window.isAudioPlaying = false;
 
@@ -1465,19 +1528,19 @@
                 bgm.pause();
                 window.isAudioPlaying = false;
                 setAudioUI(false);
-                window.showToast('Wedding music paused.');
+                window.showToast('Music paused.');
                 return;
             }
 
-            bgm.volume = 0.65;
+            bgm.volume = 0.75;
             const playPromise = bgm.play();
             if (playPromise !== undefined) {
                 playPromise.then(() => {
                     window.isAudioPlaying = true;
                     setAudioUI(true);
-                    if (!forceStart) window.showToast('Playing classical Veena, Tabla & Flute music.');
+                    if (!forceStart) window.showToast('Playing "Mystic Dawns In Delhi" (Sitar & Tabla).');
                 }).catch((err) => {
-                    console.warn('Audio playback waiting for user gesture:', err);
+                    console.warn('Audio playback waiting for user interaction:', err);
                 });
             }
         }
