@@ -200,32 +200,6 @@
             transform: translateY(90px) scale(1.06);
         }
 
-        /* 3D Flip Cards for Sacred Vivaha Rituals */
-        .ritual-flip-card {
-            perspective: 1200px;
-            height: 270px;
-        }
-        .ritual-flip-inner {
-            position: relative;
-            width: 100%;
-            height: 100%;
-            transition: transform 0.75s cubic-bezier(0.22, 1, 0.36, 1);
-            transform-style: preserve-3d;
-        }
-        .ritual-flip-card.is-flipped .ritual-flip-inner {
-            transform: rotateY(180deg);
-        }
-        .ritual-face {
-            position: absolute;
-            inset: 0;
-            backface-visibility: hidden;
-            -webkit-backface-visibility: hidden;
-            border-radius: 1.5rem;
-        }
-        .ritual-back {
-            transform: rotateY(180deg);
-        }
-
         /* Gentle Sway & Glow Animations */
         @keyframes sway {
             0%, 100% { transform: rotate(-2.5deg); }
@@ -392,7 +366,7 @@
     </button>
 
     <!-- Mobile Bottom Quick-Navigation Dock -->
-    <div class="md:hidden fixed bottom-2.5 left-1/2 -translate-x-1/2 z-40 w-[92%] max-w-sm bg-temple-darkMaroon/95 backdrop-blur-md border border-temple-gold/60 rounded-full px-4 py-2 shadow-2xl flex items-center justify-around font-cinzel text-[10px] tracking-wider uppercase text-temple-lightGold">
+    <div class="md:hidden fixed bottom-2.5 left-1/2 -translate-x-1/2 z-40 w-[90%] max-w-sm bg-temple-darkMaroon/95 backdrop-blur-md border border-temple-gold/60 rounded-full px-5 py-2 shadow-2xl flex items-center justify-around font-cinzel text-[10px] tracking-wider uppercase text-temple-lightGold">
         <a href="#invitation" class="hover:text-temple-gold transition flex flex-col items-center gap-0.5">
             <i class="fa-solid fa-scroll text-temple-gold text-xs"></i>
             <span>Invite</span>
@@ -400,10 +374,6 @@
         <a href="#events" class="hover:text-temple-gold transition flex flex-col items-center gap-0.5">
             <i class="fa-solid fa-gopuram text-temple-gold text-xs"></i>
             <span>Events</span>
-        </a>
-        <a href="#rituals" class="hover:text-temple-gold transition flex flex-col items-center gap-0.5">
-            <i class="fa-solid fa-fire-flame-curved text-temple-gold text-xs"></i>
-            <span>Rituals</span>
         </a>
         <a href="#venue" class="hover:text-temple-gold transition flex flex-col items-center gap-0.5">
             <i class="fa-solid fa-location-dot text-temple-gold text-xs"></i>
@@ -458,7 +428,6 @@
             <div class="envelope-left-flap absolute inset-0 rounded-2xl pointer-events-none"></div>
             <div class="envelope-right-flap absolute inset-0 rounded-2xl pointer-events-none"></div>
             <div class="envelope-bottom-flap absolute inset-0 rounded-2xl pointer-events-none shadow-2xl">
-                <!-- Gold Pocket Trim Line -->
                 <svg class="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
                     <polyline points="0,100 50,45 100,100" fill="none" stroke="#D4AF37" stroke-width="0.45" />
                 </svg>
@@ -505,24 +474,23 @@
             </a>
 
             <!-- Desktop Links -->
-            <div class="hidden md:flex items-center space-x-7 font-cinzel text-xs tracking-[0.18em] text-temple-ivory uppercase">
+            <div class="hidden md:flex items-center space-x-8 font-cinzel text-xs tracking-[0.18em] text-temple-ivory uppercase">
                 <a href="#invitation" class="hover:text-temple-gold transition-colors">Invitation</a>
-                <a href="#events" class="hover:text-temple-gold transition-colors">Muhurtham</a>
-                <a href="#rituals" class="hover:text-temple-gold transition-colors">Sacred Rituals</a>
+                <a href="#events" class="hover:text-temple-gold transition-colors">Muhurtham &amp; Events</a>
                 <a href="#venue" class="hover:text-temple-gold transition-colors">Venue</a>
                 <a href="#blessings" class="hover:text-temple-gold transition-colors">Wishes Wall</a>
             </div>
 
             <!-- Right Controls: Ambient Audio & Quick Blessings Link -->
             <div class="flex items-center gap-2 sm:gap-3">
-                <button id="audio-toggle-btn" onclick="toggleTempleAudio()" class="flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-temple-gold/70 bg-temple-maroon hover:bg-temple-gold hover:text-temple-darkMaroon text-temple-lightGold transition-all text-xs font-montserrat cursor-pointer" title="Toggle Serene Flute & Veena Music">
+                <button id="audio-toggle-btn" onclick="toggleTempleAudio()" class="flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-temple-gold/70 bg-temple-maroon hover:bg-temple-gold hover:text-temple-darkMaroon text-temple-lightGold transition-all text-xs font-montserrat cursor-pointer" title="Toggle Veena, Tabla & Flute Music">
                     <i id="audio-icon" class="fa-solid fa-music"></i>
                     <span id="audio-eq" class="hidden items-end gap-0.5 h-3.5">
                         <span class="w-0.5 bg-temple-brightGold eq-bar-1"></span>
                         <span class="w-0.5 bg-temple-brightGold eq-bar-2"></span>
                         <span class="w-0.5 bg-temple-brightGold eq-bar-3"></span>
                     </span>
-                    <span id="audio-label" class="hidden sm:inline">Play Flute &amp; Veena</span>
+                    <span id="audio-label" class="hidden sm:inline">Veena, Tabla &amp; Flute</span>
                 </button>
                 <a href="#blessings" class="px-3.5 py-1.5 rounded-full bg-gradient-to-r from-temple-gold to-yellow-500 text-temple-darkMaroon font-cinzel font-bold text-xs tracking-wider uppercase shadow hover:brightness-110 transition">
                     Send Wishes
@@ -538,19 +506,15 @@
         <!-- Decorative Swaying SVG Mango Leaf & Marigold Toranam -->
         <div class="w-full overflow-hidden leading-none select-none pointer-events-none animate-sway">
             <svg class="w-full h-16 sm:h-24 md:h-28" viewBox="0 0 1200 120" preserveAspectRatio="none">
-                <!-- Golden String -->
                 <path d="M0,10 Q150,45 300,10 Q450,45 600,10 Q750,45 900,10 Q1050,45 1200,10" fill="none" stroke="#D4AF37" stroke-width="3"/>
                 <defs>
                     <g id="toran-unit">
-                        <!-- Mango Leaves -->
                         <path d="M30,22 C20,50 22,78 30,95 C38,78 40,50 30,22 Z" fill="#155E3A" stroke="#D4AF37" stroke-width="1"/>
                         <path d="M75,28 C65,58 67,85 75,105 C83,85 85,58 75,28 Z" fill="#0F4D31" stroke="#D4AF37" stroke-width="1"/>
                         <path d="M120,22 C110,50 112,78 120,95 C128,78 130,50 120,22 Z" fill="#155E3A" stroke="#D4AF37" stroke-width="1"/>
-                        <!-- Marigold Flowers -->
                         <circle cx="30" cy="22" r="10" fill="#F58216" stroke="#FFD700" stroke-width="1.5"/>
                         <circle cx="75" cy="28" r="12" fill="#EAB308" stroke="#F58216" stroke-width="2"/>
                         <circle cx="120" cy="22" r="10" fill="#F58216" stroke="#FFD700" stroke-width="1.5"/>
-                        <!-- Jasmine Drops -->
                         <circle cx="52" cy="36" r="4" fill="#FAF5E8"/>
                         <circle cx="52" cy="46" r="4" fill="#FAF5E8"/>
                         <circle cx="98" cy="36" r="4" fill="#FAF5E8"/>
@@ -946,103 +910,9 @@
     </section>
 
     <!-- =========================================================
-         3.5 INTERACTIVE SACRED VIVAHA RITUALS (TAP-TO-FLIP CARDS)
-    ========================================================== -->
-    <section id="rituals" class="reveal-on-scroll py-16 sm:py-24 px-4 max-w-6xl mx-auto">
-        <div class="text-center mb-12">
-            <span class="font-cinzel text-temple-emerald font-bold text-xs sm:text-sm tracking-[0.3em] uppercase block mb-2">
-                ॥ ವೈದಿಕ ವಿವಾಹ ಸಂಪ್ರದಾಯ • Sacred Traditions ॥
-            </span>
-            <h2 class="font-cinzelDec text-3xl sm:text-5xl text-temple-maroon font-bold">
-                The Sacred Vivaha Rituals
-            </h2>
-            <p class="font-cormorant italic text-xl text-temple-darkMaroon/85 mt-2">
-                Tap any ritual card below to uncover its timeless Vedic significance
-            </p>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
-            <!-- Ritual Card 1 -->
-            <div class="ritual-flip-card cursor-pointer" onclick="flipRitualCard(this)">
-                <div class="ritual-flip-inner">
-                    <!-- Front -->
-                    <div class="ritual-face zari-border bg-temple-ivory p-7 flex flex-col items-center justify-center text-center shadow-lg">
-                        <div class="w-14 h-14 rounded-full bg-temple-maroon text-temple-gold border-2 border-temple-gold flex items-center justify-center mb-4 shadow">
-                            <i class="fa-solid fa-umbrella text-xl"></i>
-                        </div>
-                        <span class="font-cinzel text-[11px] uppercase tracking-[0.22em] text-temple-emerald font-bold mb-1">Ritual I</span>
-                        <h3 class="font-cinzelDec text-xl sm:text-2xl text-temple-maroon font-bold mb-2">Kashi Yatra &amp; Varapooja</h3>
-                        <p class="font-cormorant italic text-lg text-temple-darkMaroon/80 mb-4">The Playful Sacred Promise</p>
-                        <span class="text-xs font-cinzel uppercase tracking-widest text-temple-maroon border-b border-temple-gold pb-0.5">
-                            Tap to Reveal Meaning ↻
-                        </span>
-                    </div>
-                    <!-- Back -->
-                    <div class="ritual-face ritual-back silk-maroon-bg zari-border-dark p-7 flex flex-col items-center justify-center text-center text-temple-ivory shadow-xl">
-                        <h4 class="font-cinzel text-sm uppercase tracking-widest text-temple-gold font-bold mb-3">Kashi Yatra &amp; Varapooja</h4>
-                        <p class="font-cormorant text-lg leading-relaxed text-temple-lightGold">
-                            As the groom playfully sets out on a spiritual journey, the bride’s father persuades him to embrace Grahastha Dharma (married life) and welcomes him with sacred honors.
-                        </p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Ritual Card 2 -->
-            <div class="ritual-flip-card cursor-pointer" onclick="flipRitualCard(this)">
-                <div class="ritual-flip-inner">
-                    <!-- Front -->
-                    <div class="ritual-face zari-border bg-temple-ivory p-7 flex flex-col items-center justify-center text-center shadow-lg">
-                        <div class="w-14 h-14 rounded-full bg-temple-maroon text-temple-gold border-2 border-temple-gold flex items-center justify-center mb-4 shadow">
-                            <i class="fa-solid fa-ring text-xl"></i>
-                        </div>
-                        <span class="font-cinzel text-[11px] uppercase tracking-[0.22em] text-temple-emerald font-bold mb-1">Ritual II</span>
-                        <h3 class="font-cinzelDec text-xl sm:text-2xl text-temple-maroon font-bold mb-2">Jeelakarrabellam &amp; Mangalyam</h3>
-                        <p class="font-cormorant italic text-lg text-temple-darkMaroon/80 mb-4">The Auspicious Muhurtham Moment</p>
-                        <span class="text-xs font-cinzel uppercase tracking-widest text-temple-maroon border-b border-temple-gold pb-0.5">
-                            Tap to Reveal Meaning ↻
-                        </span>
-                    </div>
-                    <!-- Back -->
-                    <div class="ritual-face ritual-back silk-maroon-bg zari-border-dark p-7 flex flex-col items-center justify-center text-center text-temple-ivory shadow-xl">
-                        <h4 class="font-cinzel text-sm uppercase tracking-widest text-temple-gold font-bold mb-3">Mangalya Dharana</h4>
-                        <p class="font-cormorant text-lg leading-relaxed text-temple-lightGold">
-                            At the exact Muhurtham (9:00 AM – 9:45 AM), cumin and jaggery are placed on each other's heads symbolizing inseparable sweetness, followed by tying the sacred Mangalsutra.
-                        </p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Ritual Card 3 -->
-            <div class="ritual-flip-card cursor-pointer" onclick="flipRitualCard(this)">
-                <div class="ritual-flip-inner">
-                    <!-- Front -->
-                    <div class="ritual-face zari-border bg-temple-ivory p-7 flex flex-col items-center justify-center text-center shadow-lg">
-                        <div class="w-14 h-14 rounded-full bg-temple-maroon text-temple-gold border-2 border-temple-gold flex items-center justify-center mb-4 shadow">
-                            <i class="fa-solid fa-fire-flame-curved text-xl"></i>
-                        </div>
-                        <span class="font-cinzel text-[11px] uppercase tracking-[0.22em] text-temple-emerald font-bold mb-1">Ritual III</span>
-                        <h3 class="font-cinzelDec text-xl sm:text-2xl text-temple-maroon font-bold mb-2">Saptapadi &amp; Arundhati</h3>
-                        <p class="font-cormorant italic text-lg text-temple-darkMaroon/80 mb-4">Seven Sacred Steps Together</p>
-                        <span class="text-xs font-cinzel uppercase tracking-widest text-temple-maroon border-b border-temple-gold pb-0.5">
-                            Tap to Reveal Meaning ↻
-                        </span>
-                    </div>
-                    <!-- Back -->
-                    <div class="ritual-face ritual-back silk-maroon-bg zari-border-dark p-7 flex flex-col items-center justify-center text-center text-temple-ivory shadow-xl">
-                        <h4 class="font-cinzel text-sm uppercase tracking-widest text-temple-gold font-bold mb-3">Saptapadi Vows</h4>
-                        <p class="font-cormorant text-lg leading-relaxed text-temple-lightGold">
-                            Taking seven steps around the sacred Agni, the couple vows mutual respect, nourishment, strength, prosperity, and eternal companionship for seven lifetimes.
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- =========================================================
          4. VENUE & TRAVEL SECTION (TRISHUL KALABHAVAN, DAVANAGERE)
     ========================================================== -->
-    <section id="venue" class="reveal-on-scroll py-12 sm:py-20 px-4 max-w-6xl mx-auto relative">
+    <section id="venue" class="reveal-on-scroll py-16 sm:py-24 px-4 max-w-6xl mx-auto relative">
         <div class="text-center mb-12">
             <span class="font-cinzel text-temple-emerald font-bold text-xs sm:text-sm tracking-[0.3em] uppercase block mb-2">
                 ॥ ಶುಭ ಸ್ಥಳ • The Royal Destination ॥
@@ -1529,13 +1399,6 @@
             }, 2200);
         }
 
-        function flipRitualCard(cardEl) {
-            cardEl.classList.toggle('is-flipped');
-            if (window.audioCtx) {
-                window.playTempleChime(window.audioCtx, 739.99, 0);
-            }
-        }
-
         function ringBrassBell(btnEl, freq = 880) {
             if (btnEl) {
                 btnEl.classList.remove('bell-ringing');
@@ -1558,17 +1421,18 @@
         }
 
         /* =========================================================
-           SERENE BAMBOO FLUTE (VENU) & PLUCKED VEENA MUSIC ENGINE
-           Soft, warm acoustic synthesis with temple hall echo
+           CLASSICAL VEENA, TABLA & FLUTE (BANSURI) ENSEMBLE ENGINE
+           8-Beat Keherwa Taal + Plucked Veena + Raga Yaman Flute
         ========================================================== */
         window.audioCtx = null;
         window.isAudioPlaying = false;
         let masterGain = null;
-        let delayNode = null;
+        let reverbDelay = null;
         let droneNodes = [];
-        let melodyTimer = null;
-        let pluckTimer = null;
-        let phraseIndex = 0;
+        let tablaLoopTimer = null;
+        let fluteLoopTimer = null;
+        let tablaBeat = 0;
+        let melodyStep = 0;
 
         window.playTempleChime = function(ctx, freq, delay = 0) {
             const now = ctx.currentTime + delay;
@@ -1589,141 +1453,254 @@
             osc.stop(now + 2.3);
         };
 
-        // Soft, breathy Bamboo Flute (Bansuri / Venu) voice
-        function playBambooFluteNote(ctx, freq, prevFreq, startTime, duration, volume = 0.085) {
-            const fundamental = ctx.createOscillator();
-            const overtone = ctx.createOscillator();
-            const vibrato = ctx.createOscillator();
-            const vibratoGain = ctx.createGain();
-            const filter = ctx.createBiquadFilter();
-            const gain = ctx.createGain();
-            const overtoneGain = ctx.createGain();
+        // 1. TABLA SYNTHESIS (Bayan Bass + Dayan Treble Strokes)
+        function playTablaStroke(ctx, type, time) {
+            if (type === 'dha' || type === 'ge') {
+                // Warm Bayan (left bass drum) with characteristic pitch bend
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(118, time);
+                osc.frequency.exponentialRampToValueAtTime(73.42, time + 0.14); // Settles on D2
+                osc.frequency.exponentialRampToValueAtTime(82.41, time + 0.38); // Classic bayan swell
 
-            fundamental.type = 'sine';
-            overtone.type = 'triangle';
+                gain.gain.setValueAtTime(0.0001, time);
+                gain.gain.exponentialRampToValueAtTime(0.095, time + 0.015);
+                gain.gain.exponentialRampToValueAtTime(0.0001, time + 0.55);
 
-            if (prevFreq && prevFreq !== freq) {
-                fundamental.frequency.setValueAtTime(prevFreq, startTime);
-                fundamental.frequency.exponentialRampToValueAtTime(freq, startTime + 0.14);
-                overtone.frequency.setValueAtTime(prevFreq * 2, startTime);
-                overtone.frequency.exponentialRampToValueAtTime(freq * 2, startTime + 0.14);
-            } else {
-                fundamental.frequency.setValueAtTime(freq, startTime);
-                overtone.frequency.setValueAtTime(freq * 2, startTime);
+                osc.connect(gain);
+                gain.connect(masterGain);
+                osc.start(time);
+                osc.stop(time + 0.58);
             }
 
-            vibrato.type = 'sine';
-            vibrato.frequency.setValueAtTime(4.8, startTime);
-            vibratoGain.gain.setValueAtTime(0.01, startTime);
-            vibratoGain.gain.linearRampToValueAtTime(freq * 0.0075, startTime + 0.35);
-            vibrato.connect(vibratoGain);
-            vibratoGain.connect(fundamental.frequency);
+            if (type === 'dha' || type === 'na' || type === 'tin') {
+                // Tuned Dayan (right treble drum tuned to Sa = D4 / 293.66Hz)
+                const osc = ctx.createOscillator();
+                const overtone = ctx.createOscillator();
+                const gain = ctx.createGain();
+                const overGain = ctx.createGain();
 
-            filter.type = 'lowpass';
-            filter.frequency.setValueAtTime(950, startTime);
-            filter.Q.setValueAtTime(1.0, startTime);
+                const pitch = type === 'tin' ? 329.63 : 293.66;
+                osc.type = 'sine';
+                overtone.type = 'triangle';
+                osc.frequency.setValueAtTime(pitch * 1.03, time);
+                osc.frequency.exponentialRampToValueAtTime(pitch, time + 0.03);
+                overtone.frequency.setValueAtTime(pitch * 2.0, time);
 
-            gain.gain.setValueAtTime(0.0001, startTime);
-            gain.gain.exponentialRampToValueAtTime(volume, startTime + 0.22);
-            gain.gain.setValueAtTime(volume * 0.9, startTime + Math.max(0.25, duration - 0.25));
-            gain.gain.exponentialRampToValueAtTime(0.0001, startTime + duration + 0.25);
+                gain.gain.setValueAtTime(0.0001, time);
+                gain.gain.exponentialRampToValueAtTime(0.042, time + 0.008);
+                gain.gain.exponentialRampToValueAtTime(0.0001, time + 0.34);
 
-            overtoneGain.gain.setValueAtTime(0.14, startTime);
+                overGain.gain.setValueAtTime(0.25, time);
 
-            fundamental.connect(filter);
-            overtone.connect(overtoneGain);
-            overtoneGain.connect(filter);
-            filter.connect(gain);
+                osc.connect(gain);
+                overtone.connect(overGain);
+                overGain.connect(gain);
+                gain.connect(masterGain);
+                if (reverbDelay) gain.connect(reverbDelay);
 
-            gain.connect(masterGain);
-            if (delayNode) gain.connect(delayNode);
+                osc.start(time);
+                overtone.start(time);
+                osc.stop(time + 0.36);
+                overtone.stop(time + 0.36);
+            }
 
-            fundamental.start(startTime);
-            overtone.start(startTime);
-            vibrato.start(startTime);
+            if (type === 'ta' || type === 'ti') {
+                // Crisp muted slap (Ke / Ti)
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(440, time);
+                osc.frequency.exponentialRampToValueAtTime(190, time + 0.05);
 
-            const stopAt = startTime + duration + 0.3;
-            fundamental.stop(stopAt);
-            overtone.stop(stopAt);
-            vibrato.stop(stopAt);
+                gain.gain.setValueAtTime(0.0001, time);
+                gain.gain.exponentialRampToValueAtTime(0.025, time + 0.005);
+                gain.gain.exponentialRampToValueAtTime(0.0001, time + 0.08);
+
+                osc.connect(gain);
+                gain.connect(masterGain);
+                osc.start(time);
+                osc.stop(time + 0.09);
+            }
         }
 
-        // Gentle Veena / Santoor plucked string accent
-        function playVeenaPluck(ctx, freq, startTime, volume = 0.035) {
-            const osc = ctx.createOscillator();
-            const harm = ctx.createOscillator();
+        // 2. SARASWATI VEENA SYNTHESIS (Resonant Plucked String + Gamaka)
+        function playVeenaString(ctx, freq, time, duration = 1.9, volume = 0.05) {
+            const osc1 = ctx.createOscillator();
+            const osc2 = ctx.createOscillator();
             const filter = ctx.createBiquadFilter();
             const gain = ctx.createGain();
             const harmGain = ctx.createGain();
 
-            osc.type = 'triangle';
-            harm.type = 'sine';
-            osc.frequency.setValueAtTime(freq, startTime);
-            harm.frequency.setValueAtTime(freq * 2, startTime);
+            osc1.type = 'triangle';
+            osc2.type = 'sine';
 
+            // Subtle Veena bridge resonance & slight gamaka pull
+            osc1.frequency.setValueAtTime(freq * 0.995, time);
+            osc1.frequency.exponentialRampToValueAtTime(freq, time + 0.08);
+            osc2.frequency.setValueAtTime(freq * 2, time);
+
+            // Pluck brightness filter sweep
             filter.type = 'lowpass';
-            filter.frequency.setValueAtTime(1400, startTime);
-            filter.frequency.exponentialRampToValueAtTime(320, startTime + 1.8);
+            filter.frequency.setValueAtTime(1900, time);
+            filter.frequency.exponentialRampToValueAtTime(380, time + duration);
+            filter.Q.setValueAtTime(2.5, time);
 
-            gain.gain.setValueAtTime(0.0001, startTime);
-            gain.gain.exponentialRampToValueAtTime(volume, startTime + 0.018);
-            gain.gain.exponentialRampToValueAtTime(0.0001, startTime + 2.1);
+            gain.gain.setValueAtTime(0.0001, time);
+            gain.gain.exponentialRampToValueAtTime(volume, time + 0.015);
+            gain.gain.exponentialRampToValueAtTime(0.0001, time + duration);
 
-            harmGain.gain.setValueAtTime(0.25, startTime);
+            harmGain.gain.setValueAtTime(0.32, time);
 
-            osc.connect(filter);
-            harm.connect(harmGain);
+            osc1.connect(filter);
+            osc2.connect(harmGain);
             harmGain.connect(filter);
             filter.connect(gain);
 
             gain.connect(masterGain);
-            if (delayNode) gain.connect(delayNode);
+            if (reverbDelay) gain.connect(reverbDelay);
 
-            osc.start(startTime);
-            harm.start(startTime);
-            osc.stop(startTime + 2.2);
-            harm.stop(startTime + 2.2);
+            osc1.start(time);
+            osc2.start(time);
+            osc1.stop(time + duration + 0.05);
+            osc2.stop(time + duration + 0.05);
         }
 
-        const sereneFlutePhrases = [
-            [
-                { f: 440.00, d: 1.1 }, { f: 493.88, d: 0.8 }, { f: 587.33, d: 1.4 },
-                { f: 493.88, d: 0.7 }, { f: 440.00, d: 0.9 }, { f: 369.99, d: 1.5 }
-            ],
-            [
-                { f: 369.99, d: 0.9 }, { f: 440.00, d: 0.9 }, { f: 369.99, d: 0.7 },
-                { f: 329.63, d: 1.1 }, { f: 293.66, d: 1.8 }
-            ],
-            [
-                { f: 293.66, d: 0.8 }, { f: 369.99, d: 0.8 }, { f: 440.00, d: 1.0 },
-                { f: 587.33, d: 1.2 }, { f: 659.25, d: 1.0 }, { f: 587.33, d: 1.6 }
-            ],
-            [
-                { f: 493.88, d: 0.9 }, { f: 440.00, d: 0.8 }, { f: 369.99, d: 0.9 },
-                { f: 329.63, d: 0.8 }, { f: 293.66, d: 1.9 }
-            ]
+        // 3. BAMBOO FLUTE (BANSURI / VENU) SYNTHESIS
+        function playFluteVoice(ctx, freq, prevFreq, time, duration, volume = 0.075) {
+            const body = ctx.createOscillator();
+            const air = ctx.createOscillator();
+            const vibrato = ctx.createOscillator();
+            const vibratoGain = ctx.createGain();
+            const filter = ctx.createBiquadFilter();
+            const gain = ctx.createGain();
+            const airGain = ctx.createGain();
+
+            body.type = 'sine';
+            air.type = 'triangle';
+
+            if (prevFreq && prevFreq !== freq) {
+                body.frequency.setValueAtTime(prevFreq, time);
+                body.frequency.exponentialRampToValueAtTime(freq, time + 0.13);
+                air.frequency.setValueAtTime(prevFreq * 2, time);
+                air.frequency.exponentialRampToValueAtTime(freq * 2, time + 0.13);
+            } else {
+                body.frequency.setValueAtTime(freq, time);
+                air.frequency.setValueAtTime(freq * 2, time);
+            }
+
+            vibrato.type = 'sine';
+            vibrato.frequency.setValueAtTime(5.0, time);
+            vibratoGain.gain.setValueAtTime(0.01, time);
+            vibratoGain.gain.linearRampToValueAtTime(freq * 0.007, time + 0.3);
+            vibrato.connect(vibratoGain);
+            vibratoGain.connect(body.frequency);
+
+            filter.type = 'lowpass';
+            filter.frequency.setValueAtTime(980, time);
+
+            gain.gain.setValueAtTime(0.0001, time);
+            gain.gain.exponentialRampToValueAtTime(volume, time + 0.2);
+            gain.gain.setValueAtTime(volume * 0.88, time + Math.max(0.25, duration - 0.22));
+            gain.gain.exponentialRampToValueAtTime(0.0001, time + duration + 0.22);
+
+            airGain.gain.setValueAtTime(0.12, time);
+
+            body.connect(filter);
+            air.connect(airGain);
+            airGain.connect(filter);
+            filter.connect(gain);
+
+            gain.connect(masterGain);
+            if (reverbDelay) gain.connect(reverbDelay);
+
+            body.start(time);
+            air.start(time);
+            vibrato.start(time);
+
+            const stopAt = time + duration + 0.25;
+            body.stop(stopAt);
+            air.stop(stopAt);
+            vibrato.stop(stopAt);
+        }
+
+        // 8-Beat Keherwa Taal Pattern (Dha Ge Na Ti | Na Ka Dhi Na)
+        const keherwaPattern = ['dha', 'ge', 'na', 'ti', 'na', 'ta', 'dha', 'na'];
+
+        // Raga Yaman / Kalyani Ensemble Composition (D Major / Lydian: D, E, F#, G#, A, B, C#, D')
+        // Pairs Flute melody with Veena accompaniment
+        const ensemblePhrases = [
+            {
+                flute: [
+                    { f: 369.99, d: 0.9 }, { f: 440.00, d: 0.9 }, { f: 493.88, d: 0.9 }, { f: 587.33, d: 1.3 }
+                ],
+                veena: [
+                    { f: 293.66, offset: 0.0 }, { f: 440.00, offset: 0.9 }, { f: 369.99, offset: 1.8 }, { f: 293.66, offset: 2.7 }
+                ]
+            },
+            {
+                flute: [
+                    { f: 554.37, d: 0.8 }, { f: 493.88, d: 0.8 }, { f: 440.00, d: 1.0 }, { f: 369.99, d: 1.4 }
+                ],
+                veena: [
+                    { f: 220.00, offset: 0.0 }, { f: 329.63, offset: 0.9 }, { f: 440.00, offset: 1.8 }, { f: 369.99, offset: 2.7 }
+                ]
+            },
+            {
+                flute: [
+                    { f: 329.63, d: 0.8 }, { f: 369.99, d: 0.8 }, { f: 440.00, d: 1.0 }, { f: 493.88, d: 1.4 }
+                ],
+                veena: [
+                    { f: 246.94, offset: 0.0 }, { f: 369.99, offset: 0.9 }, { f: 440.00, offset: 1.8 }, { f: 293.66, offset: 2.7 }
+                ]
+            },
+            {
+                flute: [
+                    { f: 440.00, d: 0.8 }, { f: 369.99, d: 0.8 }, { f: 329.63, d: 0.9 }, { f: 293.66, d: 1.6 }
+                ],
+                veena: [
+                    { f: 293.66, offset: 0.0 }, { f: 220.00, offset: 0.9 }, { f: 369.99, offset: 1.8 }, { f: 293.66, offset: 2.7 }
+                ]
+            }
         ];
 
-        function scheduleNextFlutePhrase() {
-            if (!window.isAudioPlaying || !window.audioCtx) return;
+        function startEnsembleLoops() {
+            const beatMs = 460; // ~130 BPM gentle classical groove
 
-            const phrase = sereneFlutePhrases[phraseIndex % sereneFlutePhrases.length];
-            phraseIndex++;
+            // Tabla rhythmic loop
+            tablaBeat = 0;
+            tablaLoopTimer = setInterval(() => {
+                if (!window.isAudioPlaying || !window.audioCtx) return;
+                const stroke = keherwaPattern[tablaBeat % keherwaPattern.length];
+                playTablaStroke(window.audioCtx, stroke, window.audioCtx.currentTime + 0.02);
+                tablaBeat++;
+            }, beatMs);
 
-            let cursor = window.audioCtx.currentTime + 0.15;
-            let prevFreq = null;
+            // Flute + Veena melodic loop (aligned to 8-beat cycles = 3680ms)
+            function playNextPhrase() {
+                if (!window.isAudioPlaying || !window.audioCtx) return;
+                const part = ensemblePhrases[melodyStep % ensemblePhrases.length];
+                melodyStep++;
 
-            phrase.forEach((note, idx) => {
-                playBambooFluteNote(window.audioCtx, note.f, prevFreq, cursor, note.d);
-                if (idx === 0 || idx === 2 || idx === phrase.length - 1) {
-                    playVeenaPluck(window.audioCtx, note.f / 2, cursor, 0.032);
-                }
-                prevFreq = note.f;
-                cursor += note.d * 0.96;
-            });
+                const start = window.audioCtx.currentTime + 0.05;
+                let cursor = start;
+                let prev = null;
 
-            const totalMs = phrase.reduce((acc, n) => acc + n.d * 960, 0) + 1800;
-            melodyTimer = setTimeout(scheduleNextFlutePhrase, totalMs);
+                part.flute.forEach(n => {
+                    playFluteVoice(window.audioCtx, n.f, prev, cursor, n.d * 0.92);
+                    prev = n.f;
+                    cursor += n.d * 0.92;
+                });
+
+                part.veena.forEach(v => {
+                    playVeenaString(window.audioCtx, v.f, start + v.offset, 1.8, 0.052);
+                });
+
+                fluteLoopTimer = setTimeout(playNextPhrase, beatMs * 8);
+            }
+
+            playNextPhrase();
         }
 
         function toggleTempleAudio(forceStart = false) {
@@ -1736,8 +1713,8 @@
                     try { node.stop(); } catch (e) {}
                 });
                 droneNodes = [];
-                clearTimeout(melodyTimer);
-                clearInterval(pluckTimer);
+                clearInterval(tablaLoopTimer);
+                clearTimeout(fluteLoopTimer);
                 window.isAudioPlaying = false;
 
                 if (btnIcon) btnIcon.classList.remove('hidden');
@@ -1745,8 +1722,8 @@
                     btnEq.classList.add('hidden');
                     btnEq.classList.remove('flex');
                 }
-                if (btnLabel) btnLabel.textContent = 'Play Flute & Veena';
-                window.showToast('Flute & Veena music paused.');
+                if (btnLabel) btnLabel.textContent = 'Veena, Tabla & Flute';
+                window.showToast('Classical ensemble paused.');
                 return;
             }
 
@@ -1758,63 +1735,49 @@
                 if (window.audioCtx.state === 'suspended') window.audioCtx.resume();
 
                 masterGain = window.audioCtx.createGain();
-                masterGain.gain.setValueAtTime(0.85, window.audioCtx.currentTime);
+                masterGain.gain.setValueAtTime(0.88, window.audioCtx.currentTime);
                 masterGain.connect(window.audioCtx.destination);
 
-                delayNode = window.audioCtx.createDelay();
-                delayNode.delayTime.setValueAtTime(0.38, window.audioCtx.currentTime);
+                reverbDelay = window.audioCtx.createDelay();
+                reverbDelay.delayTime.setValueAtTime(0.32, window.audioCtx.currentTime);
                 const feedback = window.audioCtx.createGain();
-                feedback.gain.setValueAtTime(0.28, window.audioCtx.currentTime);
+                feedback.gain.setValueAtTime(0.24, window.audioCtx.currentTime);
                 const wetFilter = window.audioCtx.createBiquadFilter();
                 wetFilter.type = 'lowpass';
-                wetFilter.frequency.setValueAtTime(850, window.audioCtx.currentTime);
+                wetFilter.frequency.setValueAtTime(950, window.audioCtx.currentTime);
 
-                delayNode.connect(wetFilter);
+                reverbDelay.connect(wetFilter);
                 wetFilter.connect(feedback);
-                feedback.connect(delayNode);
+                feedback.connect(reverbDelay);
                 wetFilter.connect(masterGain);
 
-                const warmDroneNotes = [
-                    { freq: 146.83, gain: 0.028 },
-                    { freq: 220.00, gain: 0.018 },
-                    { freq: 293.66, gain: 0.016 }
-                ];
-
-                warmDroneNotes.forEach((str) => {
+                // Soft Tanpura foundation (D3 & A3)
+                [
+                    { freq: 146.83, gain: 0.022 },
+                    { freq: 220.00, gain: 0.014 }
+                ].forEach((str) => {
                     const osc = window.audioCtx.createOscillator();
                     const gain = window.audioCtx.createGain();
-
                     osc.type = 'sine';
                     osc.frequency.setValueAtTime(str.freq, window.audioCtx.currentTime);
-
                     gain.gain.setValueAtTime(0.0001, window.audioCtx.currentTime);
-                    gain.gain.exponentialRampToValueAtTime(str.gain, window.audioCtx.currentTime + 2.0);
-
+                    gain.gain.exponentialRampToValueAtTime(str.gain, window.audioCtx.currentTime + 1.5);
                     osc.connect(gain);
                     gain.connect(masterGain);
-
                     osc.start();
                     droneNodes.push(osc);
                 });
 
                 window.isAudioPlaying = true;
-                scheduleNextFlutePhrase();
-
-                const arpeggioNotes = [293.66, 369.99, 440.00, 587.33];
-                let arpIdx = 0;
-                pluckTimer = setInterval(() => {
-                    if (!window.isAudioPlaying) return;
-                    playVeenaPluck(window.audioCtx, arpeggioNotes[arpIdx % arpeggioNotes.length], window.audioCtx.currentTime, 0.022);
-                    arpIdx++;
-                }, 2600);
+                startEnsembleLoops();
 
                 if (btnIcon) btnIcon.classList.add('hidden');
                 if (btnEq) {
                     btnEq.classList.remove('hidden');
                     btnEq.classList.add('flex');
                 }
-                if (btnLabel) btnLabel.textContent = 'Flute & Veena On';
-                if (!forceStart) window.showToast('Playing serene South Indian Flute & Veena.');
+                if (btnLabel) btnLabel.textContent = 'Ensemble Playing';
+                if (!forceStart) window.showToast('Playing classical Veena, Tabla & Flute.');
             } catch (err) {
                 console.warn('Audio playback blocked until interaction:', err);
             }
@@ -1987,7 +1950,7 @@
         }
 
         document.addEventListener('click', (e) => {
-            if (e.target.closest('button, a, input, textarea, iframe, .ritual-flip-card')) return;
+            if (e.target.closest('button, a, input, textarea, iframe')) return;
             spawnBurstParticles(e.clientX, e.clientY, 10);
         });
 
