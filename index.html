@@ -264,6 +264,15 @@
             animation: spinReverseSlow 60s linear infinite;
         }
 
+        /* Equalizer Bars for Music Button */
+        @keyframes eqBar {
+            0%, 100% { height: 4px; }
+            50% { height: 14px; }
+        }
+        .eq-bar-1 { animation: eqBar 0.7s ease-in-out infinite; }
+        .eq-bar-2 { animation: eqBar 0.5s ease-in-out 0.2s infinite; }
+        .eq-bar-3 { animation: eqBar 0.8s ease-in-out 0.4s infinite; }
+
         /* Interactive 3D Tilt Cards */
         .tilt-card {
             transform-style: preserve-3d;
@@ -338,7 +347,7 @@
             ❀
         </span>
         <span class="font-cinzel font-bold text-[11px] sm:text-xs tracking-[0.14em] uppercase">
-            Shower Flowers
+            Shower Akshata
         </span>
     </button>
 
@@ -416,21 +425,27 @@
             </a>
 
             <!-- Desktop Links -->
-            <div class="hidden md:flex items-center space-x-8 font-cinzel text-xs tracking-[0.18em] text-temple-ivory uppercase">
+            <div class="hidden md:flex items-center space-x-7 font-cinzel text-xs tracking-[0.18em] text-temple-ivory uppercase">
                 <a href="#invitation" class="hover:text-temple-gold transition-colors">Invitation</a>
-                <a href="#events" class="hover:text-temple-gold transition-colors">Muhurtham & Events</a>
+                <a href="#events" class="hover:text-temple-gold transition-colors">Muhurtham</a>
+                <a href="#ritual" class="hover:text-temple-gold transition-colors">Virtual Blessing</a>
                 <a href="#venue" class="hover:text-temple-gold transition-colors">Venue</a>
-                <a href="#blessings" class="hover:text-temple-gold transition-colors">Wishes &amp; Blessings</a>
+                <a href="#blessings" class="hover:text-temple-gold transition-colors">Wishes Wall</a>
             </div>
 
             <!-- Right Controls: Ambient Audio & Quick Blessings Link -->
             <div class="flex items-center gap-2 sm:gap-3">
-                <button id="audio-toggle-btn" onclick="toggleTempleAudio()" class="flex items-center gap-2 px-3 py-1.5 rounded-full border border-temple-gold/70 bg-temple-maroon hover:bg-temple-gold hover:text-temple-darkMaroon text-temple-lightGold transition-all text-xs font-montserrat cursor-pointer" title="Toggle Auspicious Temple Drone & Chimes">
-                    <i id="audio-icon" class="fa-solid fa-volume-xmark"></i>
-                    <span id="audio-label" class="hidden sm:inline">Nadaswaram & Tanpura</span>
+                <button id="audio-toggle-btn" onclick="toggleTempleAudio()" class="flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-temple-gold/70 bg-temple-maroon hover:bg-temple-gold hover:text-temple-darkMaroon text-temple-lightGold transition-all text-xs font-montserrat cursor-pointer" title="Toggle Auspicious Carnatic Raga & Tanpura">
+                    <i id="audio-icon" class="fa-solid fa-music"></i>
+                    <span id="audio-eq" class="hidden items-end gap-0.5 h-3.5">
+                        <span class="w-0.5 bg-temple-brightGold eq-bar-1"></span>
+                        <span class="w-0.5 bg-temple-brightGold eq-bar-2"></span>
+                        <span class="w-0.5 bg-temple-brightGold eq-bar-3"></span>
+                    </span>
+                    <span id="audio-label" class="hidden sm:inline">Play Mangala Vadya</span>
                 </button>
                 <a href="#blessings" class="px-3.5 py-1.5 rounded-full bg-gradient-to-r from-temple-gold to-yellow-500 text-temple-darkMaroon font-cinzel font-bold text-xs tracking-wider uppercase shadow hover:brightness-110 transition">
-                    Send Blessings
+                    Send Wishes
                 </a>
             </div>
         </div>
@@ -528,7 +543,7 @@
                     ॥ ಶ್ರೀ ಗಣೇಶಾಯ ನಮಃ • Shubhamastu ॥
                 </p>
                 <div class="inline-flex items-center gap-3 px-5 py-1.5 rounded-full border border-temple-gold/50 bg-temple-darkMaroon/70 text-temple-gold font-cinzel text-xs sm:text-sm tracking-[0.2em] uppercase">
-                    <span>Wedding Invitation</span>
+                    <span>Shubha Vivaha Mahotsava</span>
                 </div>
             </div>
 
@@ -545,7 +560,7 @@
                 </div>
 
                 <p class="font-cormorant italic text-lg sm:text-2xl text-temple-lightGold/90 mb-2">
-                    With the divine blessings of the Almighty & our beloved elders
+                    With the divine blessings of the Almighty &amp; our beloved elders
                 </p>
 
                 <!-- Grand Couple Names -->
@@ -555,14 +570,27 @@
                     Varun
                 </h1>
 
-                <!-- Painted Bride & Groom Cameo Portrait -->
-            <div class="my-6 flex justify-center">
-                <div class="relative w-80 h-[440px] sm:w-[440px] sm:h-[590px] rounded-t-[220px] rounded-b-2xl p-2 bg-gradient-to-b from-temple-gold via-yellow-500 to-temple-gold shadow-[0_10px_35px_rgba(0,0,0,0.5)]">
-                    <div class="relative w-full h-full rounded-t-[212px] rounded-b-xl overflow-hidden bg-temple-darkMaroon border-2 border-temple-darkMaroon flex items-center justify-center">
-                        <img src="couple.png" alt="Sowmya & Varun Painted Portrait" class="w-full h-full object-cover object-center">
+                <!-- Painted Bride & Groom Cameo Portrait with Elegant Monogram Fallback -->
+                <div class="my-6 flex justify-center">
+                    <div class="relative w-72 h-[390px] sm:w-[410px] sm:h-[530px] rounded-t-[205px] rounded-b-2xl p-2 bg-gradient-to-b from-temple-gold via-yellow-500 to-temple-gold shadow-[0_10px_35px_rgba(0,0,0,0.5)]">
+                        <div class="relative w-full h-full rounded-t-[197px] rounded-b-xl overflow-hidden bg-gradient-to-b from-temple-maroon to-temple-darkMaroon border-2 border-temple-darkMaroon flex items-center justify-center">
+                            <img src="couple.png" alt="Sowmya & Varun Painted Portrait" 
+                                onerror="this.style.display='none'; document.getElementById('portrait-fallback').classList.remove('hidden');"
+                                class="w-full h-full object-cover object-center">
+                            
+                            <!-- Graceful Fallback Emblem if couple.png is absent -->
+                            <div id="portrait-fallback" class="hidden flex-col items-center justify-center p-8 text-center">
+                                <div class="w-28 h-28 rounded-full border-2 border-temple-gold/80 flex items-center justify-center mb-4 bg-temple-darkMaroon/70 shadow-inner">
+                                    <span class="font-cinzelDec text-3xl gold-foil-text font-bold">S &amp; V</span>
+                                </div>
+                                <p class="font-cinzel text-xs uppercase tracking-[0.25em] text-temple-gold mb-2">Two Souls • One Sacred Bond</p>
+                                <p class="font-cormorant italic text-xl text-temple-lightGold/90">
+                                    "In the presence of Agni, elders, and cherished loved ones"
+                                </p>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
 
                 <p class="font-cormorant text-lg sm:text-2xl text-temple-ivory/95 max-w-xl mx-auto leading-relaxed">
                     Together with their families, we joyfully invite you to celebrate our sacred union
@@ -708,7 +736,7 @@
                     <h3 class="font-cinzelDec text-2xl sm:text-3xl text-temple-maroon font-bold">Varun</h3>
                     <div class="w-12 h-[1px] bg-temple-gold mx-auto my-3"></div>
                     <p class="font-cormorant text-lg text-temple-darkMaroon/90">
-                        Seeking the blessings of elders & loved ones as he steps into this auspicious new chapter.
+                        Seeking the blessings of elders &amp; loved ones as he steps into this auspicious new chapter.
                     </p>
                 </div>
             </div>
@@ -716,7 +744,7 @@
     </section>
 
     <!-- =========================================================
-         3. EVENT SCHEDULE CARDS (TEMPLE ARCHES)
+         3. EVENT SCHEDULE CARDS (TEMPLE ARCHES) + ATTIRE GUIDE
     ========================================================== -->
     <section id="events" class="reveal-on-scroll py-16 sm:py-24 px-4 silk-emerald-bg text-temple-ivory relative overflow-hidden">
         <!-- Floating Ambient Lotus Watermark -->
@@ -747,7 +775,6 @@
                 <!-- Card 1: Reception (Dec 29) -->
                 <div class="tilt-card gold-shimmer-card temple-arch-card silk-maroon-bg zari-border-dark p-8 sm:p-10 pt-14 sm:pt-16 text-center flex flex-col justify-between shadow-2xl group hover:-translate-y-1 transition-transform duration-300">
                     <div>
-                        <!-- Decorative Lantern / Lotus Top Icon -->
                         <div class="animate-float-bob w-16 h-16 mx-auto mb-5 rounded-full bg-temple-darkMaroon border-2 border-temple-gold flex items-center justify-center text-temple-gold shadow-md">
                             <i class="fa-solid fa-wand-magic-sparkles text-2xl"></i>
                         </div>
@@ -759,7 +786,6 @@
                             Wedding Reception
                         </h3>
 
-                        <!-- Date & Time Highlight -->
                         <div class="my-6 py-4 px-4 rounded-2xl bg-temple-darkMaroon/80 border border-temple-gold/40">
                             <p class="font-cinzel text-sm uppercase tracking-widest text-temple-gold">Tuesday</p>
                             <p class="font-cinzelDec text-3xl sm:text-4xl font-bold text-white my-1">
@@ -770,9 +796,15 @@
                             </p>
                         </div>
 
-                        <p class="font-cormorant text-lg sm:text-xl text-temple-ivory/90 leading-relaxed mb-6">
+                        <p class="font-cormorant text-lg sm:text-xl text-temple-ivory/90 leading-relaxed mb-4">
                             Join us for an enchanting evening filled with warm greetings, classical melodies, festive lights, and a grand celebratory dinner.
                         </p>
+
+                        <!-- Dress Code Suggestion Pill -->
+                        <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-temple-darkMaroon/90 border border-temple-gold/30 text-xs font-montserrat text-temple-lightGold mb-5">
+                            <span class="w-2.5 h-2.5 rounded-full bg-temple-gold"></span>
+                            <span>Attire: Festive Silk, Sarees &amp; Royal Ethnic</span>
+                        </div>
                     </div>
 
                     <div class="pt-4 border-t border-temple-gold/30">
@@ -788,7 +820,6 @@
                 <!-- Card 2: Muhurtham (Dec 30) -->
                 <div class="tilt-card gold-shimmer-card temple-arch-card silk-maroon-bg zari-border-dark p-8 sm:p-10 pt-14 sm:pt-16 text-center flex flex-col justify-between shadow-2xl group hover:-translate-y-1 transition-transform duration-300">
                     <div>
-                        <!-- Decorative Sacred Sun / Temple Top Icon -->
                         <div class="animate-float-bob w-16 h-16 mx-auto mb-5 rounded-full bg-temple-darkMaroon border-2 border-temple-gold flex items-center justify-center text-temple-gold shadow-md">
                             <i class="fa-solid fa-sun text-2xl"></i>
                         </div>
@@ -800,7 +831,6 @@
                             Subha Muhurtham
                         </h3>
 
-                        <!-- Date & Time Highlight -->
                         <div class="my-6 py-4 px-4 rounded-2xl bg-temple-darkMaroon/80 border border-temple-gold/40">
                             <p class="font-cinzel text-sm uppercase tracking-widest text-temple-gold">Wednesday</p>
                             <p class="font-cinzelDec text-3xl sm:text-4xl font-bold text-white my-1">
@@ -811,9 +841,15 @@
                             </p>
                         </div>
 
-                        <p class="font-cormorant text-lg sm:text-xl text-temple-ivory/90 leading-relaxed mb-6">
+                        <p class="font-cormorant text-lg sm:text-xl text-temple-ivory/90 leading-relaxed mb-4">
                             Witness the sacred tying of the Mangalsutra and Vedic rituals amidst chanting of mantras, followed by traditional banana-leaf wedding feast (Bhojana).
                         </p>
+
+                        <!-- Dress Code Suggestion Pill -->
+                        <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-temple-darkMaroon/90 border border-temple-gold/30 text-xs font-montserrat text-temple-lightGold mb-5">
+                            <span class="w-2.5 h-2.5 rounded-full bg-temple-marigold"></span>
+                            <span>Attire: Traditional Kanjeevaram &amp; Panchakacham</span>
+                        </div>
                     </div>
 
                     <div class="pt-4 border-t border-temple-gold/30">
@@ -831,9 +867,44 @@
     </section>
 
     <!-- =========================================================
+         3.5 INTERACTIVE VIRTUAL AKSHATA BLESSING RITUAL
+    ========================================================== -->
+    <section id="ritual" class="reveal-on-scroll py-14 sm:py-20 px-4 max-w-4xl mx-auto">
+        <div class="zari-border rounded-3xl bg-gradient-to-br from-temple-ivory via-temple-sandal/70 to-temple-ivory p-7 sm:p-11 text-center shadow-xl relative overflow-hidden">
+            <span class="font-cinzel text-temple-emerald font-bold text-xs tracking-[0.28em] uppercase block mb-2">
+                ॥ ಮಂಗಳಾಕ್ಷತೆ • Sacred Interactive Ritual ॥
+            </span>
+            <h2 class="font-cinzelDec text-2xl sm:text-4xl text-temple-maroon font-bold mb-3">
+                Offer Virtual Akshata &amp; Jasmine
+            </h2>
+            <p class="font-cormorant text-lg sm:text-xl text-temple-darkMaroon/90 max-w-2xl mx-auto mb-6">
+                In South Indian tradition, elders and loved ones shower turmeric-kissed rice (<em>Akshata</em>) and fragrant flowers to bless the couple with lifelong prosperity. Tap the sacred Kalasha below to offer your blessing!
+            </p>
+
+            <div class="flex flex-col items-center justify-center">
+                <button type="button" id="akshata-kalasha-btn" onclick="offerSacredAkshata(this)"
+                    class="group relative w-32 h-32 sm:w-36 sm:h-36 rounded-full bg-gradient-to-b from-temple-maroon to-temple-darkMaroon border-4 border-temple-gold shadow-[0_10px_30px_rgba(92,10,26,0.35)] flex flex-col items-center justify-center hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer">
+                    <div class="absolute inset-0 rounded-full bg-temple-gold/20 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                    <svg class="w-14 h-14 text-temple-gold group-hover:scale-110 transition-transform" viewBox="0 0 64 64" fill="currentColor">
+                        <path d="M32 4C30 9 29 13 32 17C35 13 34 9 32 4ZM23 14C21 18 22 22 26 24C25 20 24 17 23 14ZM41 14C40 17 39 20 38 24C42 22 43 18 41 14ZM22 26H42C46 31 46 40 41 46H23C18 40 18 31 22 26ZM20 50H44L41 56H23L20 50Z"/>
+                    </svg>
+                    <span class="font-cinzel text-[10px] tracking-[0.2em] uppercase text-temple-lightGold mt-1 font-bold">Tap to Bless</span>
+                </button>
+
+                <div class="mt-5 inline-flex items-center gap-2.5 px-5 py-2 rounded-full bg-temple-maroon text-temple-lightGold border border-temple-gold/70 shadow-md">
+                    <span class="text-temple-brightGold">✦</span>
+                    <span class="font-cinzel text-xs sm:text-sm tracking-wider">
+                        <strong id="akshata-count" class="text-temple-brightGold font-bold">108</strong> Sacred Akshata Offerings Showered
+                    </span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- =========================================================
          4. VENUE & TRAVEL SECTION (TRISHUL KALABHAVAN, DAVANAGERE)
     ========================================================== -->
-    <section id="venue" class="reveal-on-scroll py-16 sm:py-24 px-4 max-w-6xl mx-auto relative">
+    <section id="venue" class="reveal-on-scroll py-12 sm:py-20 px-4 max-w-6xl mx-auto relative">
         <div class="text-center mb-12">
             <span class="font-cinzel text-temple-emerald font-bold text-xs sm:text-sm tracking-[0.3em] uppercase block mb-2">
                 ॥ ಶುಭ ಸ್ಥಳ • The Royal Destination ॥
@@ -849,7 +920,6 @@
         <div class="zari-border rounded-3xl bg-white/95 overflow-hidden shadow-2xl grid grid-cols-1 lg:grid-cols-12">
             <!-- Left Venue & Interactive Route/Landmark Showcase -->
             <div class="lg:col-span-5 p-7 sm:p-10 flex flex-col justify-between bg-temple-ivory relative border-b lg:border-b-0 lg:border-r-2 border-temple-gold/60">
-                <!-- Decorative Corner Kolam Flourish -->
                 <div class="absolute top-3 right-4 text-temple-gold/40 text-xl pointer-events-none">❖</div>
 
                 <div>
@@ -917,11 +987,9 @@
 
             <!-- Right Ornate Temple-Arch & Gold-Filigree Framed Interactive Leaflet Map -->
             <div class="lg:col-span-7 silk-maroon-bg p-5 sm:p-8 flex flex-col justify-between relative overflow-hidden">
-                <!-- Subtle Gold Filigree Corner Ornaments -->
                 <div class="absolute top-3 left-3 text-temple-gold/60 text-lg pointer-events-none">╔═ ✦</div>
                 <div class="absolute top-3 right-3 text-temple-gold/60 text-lg pointer-events-none">✦ ═╗</div>
 
-                <!-- Top Temple Gopuram / Arch Header Bar -->
                 <div class="text-center mb-3 relative z-10">
                     <div class="inline-flex items-center gap-2 px-4 py-1 rounded-full bg-temple-darkMaroon/90 border border-temple-gold/60 text-temple-lightGold font-cinzel text-[11px] tracking-[0.2em] uppercase shadow">
                         <span class="text-temple-gold">✦</span> Interactive Sacred Map <span class="text-temple-gold">✦</span>
@@ -932,10 +1000,8 @@
                 <div class="royal-map-container relative flex-1 min-h-[360px] sm:min-h-[430px] rounded-t-[130px] sm:rounded-t-[170px] rounded-b-2xl p-2 bg-gradient-to-b from-temple-gold via-yellow-500 to-temple-gold shadow-[0_15px_40px_rgba(0,0,0,0.55)]">
                     <div class="relative w-full h-full min-h-[344px] sm:min-h-[414px] rounded-t-[122px] sm:rounded-t-[162px] rounded-b-xl overflow-hidden bg-temple-sandal border-2 border-temple-darkMaroon">
                         
-                        <!-- Interactive Leaflet Map Container (Zero API Key Watermark) -->
                         <div id="leaflet-venue-map" class="w-full h-full min-h-[344px] sm:min-h-[414px] royal-map-filter z-0"></div>
 
-                        <!-- Subtle Golden Pulse Pin & Venue Badge Overlay -->
                         <div class="absolute top-4 left-1/2 -translate-x-1/2 z-10 pointer-events-none flex flex-col items-center">
                             <div class="bg-temple-darkMaroon/95 backdrop-blur-sm text-temple-lightGold border border-temple-gold px-4 py-1.5 rounded-full shadow-xl flex items-center gap-2.5 whitespace-nowrap">
                                 <span class="relative flex h-3 w-3">
@@ -948,7 +1014,6 @@
                             </div>
                         </div>
 
-                        <!-- Bottom Floating Quick-Zoom / Reset View Pill -->
                         <div class="absolute bottom-3 left-3 right-3 z-10 flex flex-wrap items-center justify-between gap-2 pointer-events-none">
                             <span class="bg-temple-ivory/95 text-temple-darkMaroon border border-temple-gold px-3 py-1 rounded-full text-[11px] font-cinzel font-bold shadow-md">
                                 <i class="fa-solid fa-location-crosshairs text-temple-maroon mr-1"></i> 14.4607° N, 75.9278° E
@@ -960,7 +1025,6 @@
                     </div>
                 </div>
 
-                <!-- Bottom Gold Filigree Footer Strip -->
                 <div class="mt-3 pt-2 flex flex-wrap items-center justify-between gap-2 text-xs font-cinzel text-temple-lightGold px-1">
                     <span><i class="fa-solid fa-square-parking text-temple-gold mr-1.5"></i> Ample Guest Parking Available</span>
                     <a href="https://www.google.com/maps/search/?api=1&query=Trishul+Kalabhavan+Davanagere+Karnataka" target="_blank" rel="noopener noreferrer" class="text-temple-gold hover:text-white underline font-bold tracking-wider">
@@ -990,7 +1054,7 @@
 
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 sm:gap-10 items-start">
                 
-                <!-- Left Column: Send a Blessing Form (No Attendance Confirmation) -->
+                <!-- Left Column: Send a Blessing Form -->
                 <div class="lg:col-span-5 bg-temple-ivory text-temple-darkMaroon zari-border rounded-3xl p-6 sm:p-8 shadow-2xl">
                     <div class="w-12 h-12 mx-auto mb-3 rounded-full bg-temple-maroon/10 border border-temple-gold flex items-center justify-center text-temple-maroon">
                         <i class="fa-solid fa-hands-praying text-xl text-temple-gold"></i>
@@ -998,7 +1062,7 @@
                     <h3 class="font-cinzelDec text-2xl text-temple-maroon font-bold mb-1 text-center">
                         Write Your Blessings
                     </h3>
-                    <p class="font-cormorant text-center text-temple-emerald italic text-lg mb-6">
+                    <p class="font-cormorant text-center text-temple-emerald italic text-lg mb-5">
                         Your words of love mean the world to us
                     </p>
 
@@ -1021,12 +1085,33 @@
                                 class="w-full px-4 py-2.5 rounded-xl bg-white border border-temple-gold/70 focus:outline-none focus:ring-2 focus:ring-temple-maroon text-temple-darkMaroon">
                         </div>
 
+                        <!-- Quick Blessing Chips for Easy Mobile Engagement -->
+                        <div>
+                            <label class="block font-cinzel text-xs font-bold uppercase tracking-wider text-temple-maroon mb-1.5">
+                                Quick Blessings (Tap to Add)
+                            </label>
+                            <div class="flex flex-wrap gap-1.5">
+                                <button type="button" onclick="insertBlessingPreset('Wishing Sowmya & Varun a lifetime of eternal love, laughter, and togetherness!')"
+                                    class="text-[11px] px-2.5 py-1 rounded-full bg-temple-sandal hover:bg-temple-gold/40 border border-temple-gold/60 text-temple-maroon transition cursor-pointer">
+                                    ✨ Lifetime of Love
+                                </button>
+                                <button type="button" onclick="insertBlessingPreset('Shubha Vivaha! May Lord Ganesha bless your sacred union with endless joy and prosperity.')"
+                                    class="text-[11px] px-2.5 py-1 rounded-full bg-temple-sandal hover:bg-temple-gold/40 border border-temple-gold/60 text-temple-maroon transition cursor-pointer">
+                                    🙏 Divine Blessings
+                                </button>
+                                <button type="button" onclick="insertBlessingPreset('Heartiest congratulations to both families! Can’t wait to celebrate with you in Davanagere.')"
+                                    class="text-[11px] px-2.5 py-1 rounded-full bg-temple-sandal hover:bg-temple-gold/40 border border-temple-gold/60 text-temple-maroon transition cursor-pointer">
+                                    🎉 See You There!
+                                </button>
+                            </div>
+                        </div>
+
                         <!-- Blessing / Wish Note -->
                         <div>
                             <label class="block font-cinzel text-xs font-bold uppercase tracking-wider text-temple-maroon mb-1">
                                 Blessing / Wish for the Couple *
                             </label>
-                            <textarea id="guest-blessing" rows="4" required placeholder="Write your heartfelt blessing for Sowmya & Varun..." 
+                            <textarea id="guest-blessing" rows="3" required placeholder="Write your heartfelt blessing for Sowmya & Varun..." 
                                 class="w-full px-4 py-2.5 rounded-xl bg-white border border-temple-gold/70 focus:outline-none focus:ring-2 focus:ring-temple-maroon text-temple-darkMaroon"></textarea>
                         </div>
 
@@ -1194,6 +1279,14 @@
         renderBlessingsWall();
         fetchBlessingsFromSheet();
 
+        function insertBlessingPreset(text) {
+            const box = document.getElementById('guest-blessing');
+            if (box) {
+                box.value = text;
+                box.focus();
+            }
+        }
+
         async function handleBlessingSubmit(e) {
             e.preventDefault();
             const nameInput = document.getElementById('guest-name');
@@ -1221,7 +1314,7 @@
             });
             renderBlessingsWall();
 
-            if (window.isAudioPlaying && window.audioCtx && window.playTempleChime) {
+            if (window.audioCtx) {
                 window.playTempleChime(window.audioCtx, 659.25, 0);
                 window.playTempleChime(window.audioCtx, 1046.50, 0.2);
             }
@@ -1310,10 +1403,16 @@
             }
         }
 
+        /* =========================================================
+           IMPROVED CARNATIC WEDDING MUSIC ENGINE (RAGA MOHANAM)
+           Synthesizes Warm Tanpura + Expressive Nadaswaram/Veena + Manjira
+        ========================================================== */
         window.audioCtx = null;
         window.isAudioPlaying = false;
         let droneNodes = [];
-        let chimeInterval = null;
+        let melodyTimer = null;
+        let manjiraTimer = null;
+        let phraseIndex = 0;
 
         window.playTempleChime = function(ctx, freq, delay = 0) {
             const now = ctx.currentTime + delay;
@@ -1324,18 +1423,112 @@
             osc.frequency.setValueAtTime(freq, now);
 
             gain.gain.setValueAtTime(0.0001, now);
-            gain.gain.exponentialRampToValueAtTime(0.06, now + 0.04);
-            gain.gain.exponentialRampToValueAtTime(0.0001, now + 2.8);
+            gain.gain.exponentialRampToValueAtTime(0.055, now + 0.03);
+            gain.gain.exponentialRampToValueAtTime(0.0001, now + 2.4);
 
             osc.connect(gain);
             gain.connect(ctx.destination);
 
             osc.start(now);
-            osc.stop(now + 2.9);
+            osc.stop(now + 2.5);
         };
+
+        // Expressive Nadaswaram / Flute-Veena note with gentle gamaka vibrato
+        function playMangalaNote(ctx, freq, startTime, duration, volume = 0.042) {
+            const osc1 = ctx.createOscillator();
+            const osc2 = ctx.createOscillator();
+            const vibrato = ctx.createOscillator();
+            const vibratoGain = ctx.createGain();
+            const filter = ctx.createBiquadFilter();
+            const gain = ctx.createGain();
+
+            // Warm reed + flute blend
+            osc1.type = 'sawtooth';
+            osc2.type = 'triangle';
+            osc1.frequency.setValueAtTime(freq, startTime);
+            osc2.frequency.setValueAtTime(freq * 2, startTime); // Octave harmonic shimmer
+
+            // Subtle Carnatic Gamaka (vibrato)
+            vibrato.type = 'sine';
+            vibrato.frequency.setValueAtTime(5.2, startTime);
+            vibratoGain.gain.setValueAtTime(freq * 0.009, startTime);
+            vibrato.connect(vibratoGain);
+            vibratoGain.connect(osc1.frequency);
+
+            // Soften harshness for a serene, sacred ambience
+            filter.type = 'lowpass';
+            filter.frequency.setValueAtTime(1150, startTime);
+            filter.Q.setValueAtTime(2.2, startTime);
+
+            // Smooth breath envelope
+            gain.gain.setValueAtTime(0.0001, startTime);
+            gain.gain.exponentialRampToValueAtTime(volume, startTime + 0.14);
+            gain.gain.setValueAtTime(volume * 0.85, startTime + duration - 0.18);
+            gain.gain.exponentialRampToValueAtTime(0.0001, startTime + duration + 0.15);
+
+            const subGain = ctx.createGain();
+            subGain.gain.setValueAtTime(0.35, startTime);
+
+            osc1.connect(filter);
+            osc2.connect(subGain);
+            subGain.connect(filter);
+            filter.connect(gain);
+            gain.connect(ctx.destination);
+
+            osc1.start(startTime);
+            osc2.start(startTime);
+            vibrato.start(startTime);
+
+            const stopAt = startTime + duration + 0.2;
+            osc1.stop(stopAt);
+            osc2.stop(stopAt);
+            vibrato.stop(stopAt);
+        }
+
+        // Auspicious Raga Mohanam (C Major Pentatonic: Sa Re Ga Pa Dha Sa')
+        // Similar festive wedding mood without copying any specific copyrighted song
+        const mohanamPhrases = [
+            // Ascending auspicious alaap phrase
+            [
+                { f: 261.63, d: 0.75 }, { f: 293.66, d: 0.55 }, { f: 329.63, d: 0.85 },
+                { f: 392.00, d: 1.10 }, { f: 329.63, d: 0.55 }, { f: 293.66, d: 0.90 }
+            ],
+            // Joyful upper octave flourish
+            [
+                { f: 329.63, d: 0.60 }, { f: 392.00, d: 0.65 }, { f: 440.00, d: 0.75 },
+                { f: 523.25, d: 1.30 }, { f: 440.00, d: 0.65 }, { f: 392.00, d: 1.00 }
+            ],
+            // Gentle descending blessing cadence
+            [
+                { f: 523.25, d: 0.70 }, { f: 440.00, d: 0.60 }, { f: 392.00, d: 0.80 },
+                { f: 329.63, d: 0.70 }, { f: 293.66, d: 0.65 }, { f: 261.63, d: 1.40 }
+            ],
+            // Festive swara call-and-response
+            [
+                { f: 392.00, d: 0.65 }, { f: 440.00, d: 0.65 }, { f: 392.00, d: 0.60 },
+                { f: 329.63, d: 0.85 }, { f: 293.66, d: 0.60 }, { f: 329.63, d: 1.15 }
+            ]
+        ];
+
+        function scheduleNextRagaPhrase() {
+            if (!window.isAudioPlaying || !window.audioCtx) return;
+
+            const phrase = mohanamPhrases[phraseIndex % mohanamPhrases.length];
+            phraseIndex++;
+
+            let cursor = window.audioCtx.currentTime + 0.1;
+            phrase.forEach(note => {
+                playMangalaNote(window.audioCtx, note.f, cursor, note.d);
+                cursor += note.d * 0.94; // Slight legato overlap
+            });
+
+            const totalMs = phrase.reduce((acc, n) => acc + n.d * 940, 0) + 1600;
+            melodyTimer = setTimeout(scheduleNextRagaPhrase, totalMs);
+        }
 
         function toggleTempleAudio(forceStart = false) {
             const btnIcon = document.getElementById('audio-icon');
+            const btnEq = document.getElementById('audio-eq');
             const btnLabel = document.getElementById('audio-label');
 
             if (window.isAudioPlaying && !forceStart) {
@@ -1343,11 +1536,17 @@
                     try { node.stop(); } catch (e) {}
                 });
                 droneNodes = [];
-                clearInterval(chimeInterval);
+                clearTimeout(melodyTimer);
+                clearInterval(manjiraTimer);
                 window.isAudioPlaying = false;
-                if (btnIcon) btnIcon.className = 'fa-solid fa-volume-xmark';
-                if (btnLabel) btnLabel.textContent = 'Play Ambience';
-                window.showToast('Temple ambience paused.');
+
+                if (btnIcon) btnIcon.classList.remove('hidden');
+                if (btnEq) {
+                    btnEq.classList.add('hidden');
+                    btnEq.classList.remove('flex');
+                }
+                if (btnLabel) btnLabel.textContent = 'Play Mangala Vadya';
+                window.showToast('Sacred wedding ambience paused.');
                 return;
             }
 
@@ -1358,20 +1557,27 @@
                 if (!window.audioCtx) window.audioCtx = new AudioContext();
                 if (window.audioCtx.state === 'suspended') window.audioCtx.resume();
 
-                const frequencies = [130.81, 196.00, 261.63];
-                frequencies.forEach((freq) => {
+                // Rich Tanpura Drone (Pa - Sa' - Sa' slightly detuned - Sa)
+                const tanpuraStrings = [
+                    { freq: 196.00, gain: 0.018 }, // Pa
+                    { freq: 261.63, gain: 0.022 }, // Sa
+                    { freq: 262.40, gain: 0.016 }, // Jivari shimmer Sa
+                    { freq: 130.81, gain: 0.026 }  // Mandra Sa
+                ];
+
+                tanpuraStrings.forEach((str) => {
                     const osc = window.audioCtx.createOscillator();
                     const filter = window.audioCtx.createBiquadFilter();
                     const gain = window.audioCtx.createGain();
 
-                    osc.type = 'triangle';
-                    osc.frequency.setValueAtTime(freq, window.audioCtx.currentTime);
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(str.freq, window.audioCtx.currentTime);
 
                     filter.type = 'lowpass';
-                    filter.frequency.setValueAtTime(420, window.audioCtx.currentTime);
+                    filter.frequency.setValueAtTime(380, window.audioCtx.currentTime);
 
-                    gain.gain.setValueAtTime(0.001, window.audioCtx.currentTime);
-                    gain.gain.exponentialRampToValueAtTime(0.025, window.audioCtx.currentTime + 1.5);
+                    gain.gain.setValueAtTime(0.0001, window.audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(str.gain, window.audioCtx.currentTime + 1.8);
 
                     osc.connect(filter);
                     filter.connect(gain);
@@ -1381,23 +1587,52 @@
                     droneNodes.push(osc);
                 });
 
-                const ragaNotes = [523.25, 587.33, 659.25, 783.99, 880.00, 1046.50];
-                window.playTempleChime(window.audioCtx, 523.25, 0.2);
-                window.playTempleChime(window.audioCtx, 783.99, 0.9);
-
-                chimeInterval = setInterval(() => {
-                    if (!window.isAudioPlaying) return;
-                    const note = ragaNotes[Math.floor(Math.random() * ragaNotes.length)];
-                    window.playTempleChime(window.audioCtx, note);
-                }, 4200);
-
                 window.isAudioPlaying = true;
-                if (btnIcon) btnIcon.className = 'fa-solid fa-volume-high text-temple-gold';
-                if (btnLabel) btnLabel.textContent = 'Ambience On';
-                if (!forceStart) window.showToast('Auspicious Tanpura & temple chimes playing.');
+                scheduleNextRagaPhrase();
+
+                // Gentle Manjira (Temple Cymbal) sparkle every 4.8s
+                manjiraTimer = setInterval(() => {
+                    if (!window.isAudioPlaying) return;
+                    window.playTempleChime(window.audioCtx, 1046.50, 0);
+                }, 4800);
+
+                if (btnIcon) btnIcon.classList.add('hidden');
+                if (btnEq) {
+                    btnEq.classList.remove('hidden');
+                    btnEq.classList.add('flex');
+                }
+                if (btnLabel) btnLabel.textContent = 'Mangala Vadya On';
+                if (!forceStart) window.showToast('Playing auspicious Raga Mohanam & Tanpura.');
             } catch (err) {
                 console.warn('Audio playback blocked until interaction:', err);
             }
+        }
+
+        /* =========================================================
+           VIRTUAL AKSHATA BLESSING COUNTER
+        ========================================================== */
+        let akshataOfferings = 108;
+        function offerSacredAkshata(btnEl) {
+            akshataOfferings += 1;
+            const countEl = document.getElementById('akshata-count');
+            if (countEl) countEl.textContent = akshataOfferings;
+
+            if (btnEl) {
+                const rect = btnEl.getBoundingClientRect();
+                spawnBurstParticles(rect.left + rect.width / 2, rect.top + rect.height / 2, 36);
+            }
+
+            try {
+                const AudioContext = window.AudioContext || window.webkitAudioContext;
+                if (!window.audioCtx) window.audioCtx = new AudioContext();
+                if (window.audioCtx.state === 'suspended') window.audioCtx.resume();
+                window.playTempleChime(window.audioCtx, 523.25, 0);
+                window.playTempleChime(window.audioCtx, 659.25, 0.12);
+                window.playTempleChime(window.audioCtx, 783.99, 0.24);
+                window.playTempleChime(window.audioCtx, 1046.50, 0.36);
+            } catch (e) {}
+
+            window.showToast('Shubhamastu! Your sacred Akshata & jasmine blessings have been offered.');
         }
 
         function updateCountdown() {
@@ -1559,7 +1794,7 @@
             ];
             origins.forEach(([ox, oy]) => spawnBurstParticles(ox, oy, 26));
 
-            if (window.isAudioPlaying && window.audioCtx && window.playTempleChime) {
+            if (window.audioCtx) {
                 window.playTempleChime(window.audioCtx, 783.99, 0);
                 window.playTempleChime(window.audioCtx, 1046.50, 0.15);
             }
@@ -1590,7 +1825,7 @@
             requestAnimationFrame(animatePetals);
         }
 
-        // Initialize Leaflet Map for Trishul Kalabhavan, Davanagere (Exact Coordinates, No API Key)
+        // Initialize Leaflet Map for Trishul Kalabhavan, Davanagere
         let venueMap = null;
         let venueMarker = null;
 
@@ -1603,7 +1838,6 @@
                 attributionControl: false
             }).setView([VENUE_LAT, VENUE_LNG], 15);
 
-            // OpenStreetMap Free Tiles (Zero API key required)
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 maxZoom: 19,
                 subdomains: ['a', 'b', 'c']
