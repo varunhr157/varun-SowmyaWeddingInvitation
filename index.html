@@ -435,14 +435,14 @@
 
             <!-- Right Controls: Ambient Audio & Quick Blessings Link -->
             <div class="flex items-center gap-2 sm:gap-3">
-                <button id="audio-toggle-btn" onclick="toggleTempleAudio()" class="flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-temple-gold/70 bg-temple-maroon hover:bg-temple-gold hover:text-temple-darkMaroon text-temple-lightGold transition-all text-xs font-montserrat cursor-pointer" title="Toggle Auspicious Carnatic Raga & Tanpura">
+                <button id="audio-toggle-btn" onclick="toggleTempleAudio()" class="flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-temple-gold/70 bg-temple-maroon hover:bg-temple-gold hover:text-temple-darkMaroon text-temple-lightGold transition-all text-xs font-montserrat cursor-pointer" title="Toggle Serene Flute & Veena Music">
                     <i id="audio-icon" class="fa-solid fa-music"></i>
                     <span id="audio-eq" class="hidden items-end gap-0.5 h-3.5">
                         <span class="w-0.5 bg-temple-brightGold eq-bar-1"></span>
                         <span class="w-0.5 bg-temple-brightGold eq-bar-2"></span>
                         <span class="w-0.5 bg-temple-brightGold eq-bar-3"></span>
                     </span>
-                    <span id="audio-label" class="hidden sm:inline">Play Mangala Vadya</span>
+                    <span id="audio-label" class="hidden sm:inline">Play Flute &amp; Veena</span>
                 </button>
                 <a href="#blessings" class="px-3.5 py-1.5 rounded-full bg-gradient-to-r from-temple-gold to-yellow-500 text-temple-darkMaroon font-cinzel font-bold text-xs tracking-wider uppercase shadow hover:brightness-110 transition">
                     Send Wishes
@@ -1404,14 +1404,16 @@
         }
 
         /* =========================================================
-           IMPROVED CARNATIC WEDDING MUSIC ENGINE (RAGA MOHANAM)
-           Synthesizes Warm Tanpura + Expressive Nadaswaram/Veena + Manjira
+           SERENE BAMBOO FLUTE (VENU) & PLUCKED VEENA MUSIC ENGINE
+           Soft, warm acoustic synthesis with temple hall echo
         ========================================================== */
         window.audioCtx = null;
         window.isAudioPlaying = false;
+        let masterGain = null;
+        let delayNode = null;
         let droneNodes = [];
         let melodyTimer = null;
-        let manjiraTimer = null;
+        let pluckTimer = null;
         let phraseIndex = 0;
 
         window.playTempleChime = function(ctx, freq, delay = 0) {
@@ -1423,107 +1425,163 @@
             osc.frequency.setValueAtTime(freq, now);
 
             gain.gain.setValueAtTime(0.0001, now);
-            gain.gain.exponentialRampToValueAtTime(0.055, now + 0.03);
-            gain.gain.exponentialRampToValueAtTime(0.0001, now + 2.4);
+            gain.gain.exponentialRampToValueAtTime(0.045, now + 0.02);
+            gain.gain.exponentialRampToValueAtTime(0.0001, now + 2.2);
 
             osc.connect(gain);
-            gain.connect(ctx.destination);
+            gain.connect(masterGain || ctx.destination);
 
             osc.start(now);
-            osc.stop(now + 2.5);
+            osc.stop(now + 2.3);
         };
 
-        // Expressive Nadaswaram / Flute-Veena note with gentle gamaka vibrato
-        function playMangalaNote(ctx, freq, startTime, duration, volume = 0.042) {
-            const osc1 = ctx.createOscillator();
-            const osc2 = ctx.createOscillator();
+        // Soft, breathy Bamboo Flute (Bansuri / Venu) voice
+        function playBambooFluteNote(ctx, freq, prevFreq, startTime, duration, volume = 0.085) {
+            const fundamental = ctx.createOscillator();
+            const overtone = ctx.createOscillator();
             const vibrato = ctx.createOscillator();
             const vibratoGain = ctx.createGain();
             const filter = ctx.createBiquadFilter();
             const gain = ctx.createGain();
+            const overtoneGain = ctx.createGain();
 
-            // Warm reed + flute blend
-            osc1.type = 'sawtooth';
-            osc2.type = 'triangle';
-            osc1.frequency.setValueAtTime(freq, startTime);
-            osc2.frequency.setValueAtTime(freq * 2, startTime); // Octave harmonic shimmer
+            // Pure sine + gentle triangle for warm wooden flute tone
+            fundamental.type = 'sine';
+            overtone.type = 'triangle';
 
-            // Subtle Carnatic Gamaka (vibrato)
+            // Smooth Carnatic Meend (pitch glide from previous note)
+            if (prevFreq && prevFreq !== freq) {
+                fundamental.frequency.setValueAtTime(prevFreq, startTime);
+                fundamental.frequency.exponentialRampToValueAtTime(freq, startTime + 0.14);
+                overtone.frequency.setValueAtTime(prevFreq * 2, startTime);
+                overtone.frequency.exponentialRampToValueAtTime(freq * 2, startTime + 0.14);
+            } else {
+                fundamental.frequency.setValueAtTime(freq, startTime);
+                overtone.frequency.setValueAtTime(freq * 2, startTime);
+            }
+
+            // Gentle delayed vibrato (kicks in naturally after breath attack)
             vibrato.type = 'sine';
-            vibrato.frequency.setValueAtTime(5.2, startTime);
-            vibratoGain.gain.setValueAtTime(freq * 0.009, startTime);
+            vibrato.frequency.setValueAtTime(4.8, startTime);
+            vibratoGain.gain.setValueAtTime(0.01, startTime);
+            vibratoGain.gain.linearRampToValueAtTime(freq * 0.0075, startTime + 0.35);
             vibrato.connect(vibratoGain);
-            vibratoGain.connect(osc1.frequency);
+            vibratoGain.connect(fundamental.frequency);
 
-            // Soften harshness for a serene, sacred ambience
+            // Warm lowpass filter to remove any sharp edges
             filter.type = 'lowpass';
-            filter.frequency.setValueAtTime(1150, startTime);
-            filter.Q.setValueAtTime(2.2, startTime);
+            filter.frequency.setValueAtTime(950, startTime);
+            filter.Q.setValueAtTime(1.0, startTime);
 
-            // Smooth breath envelope
+            // Soft breath swell envelope
             gain.gain.setValueAtTime(0.0001, startTime);
-            gain.gain.exponentialRampToValueAtTime(volume, startTime + 0.14);
-            gain.gain.setValueAtTime(volume * 0.85, startTime + duration - 0.18);
-            gain.gain.exponentialRampToValueAtTime(0.0001, startTime + duration + 0.15);
+            gain.gain.exponentialRampToValueAtTime(volume, startTime + 0.22);
+            gain.gain.setValueAtTime(volume * 0.9, startTime + Math.max(0.25, duration - 0.25));
+            gain.gain.exponentialRampToValueAtTime(0.0001, startTime + duration + 0.25);
 
-            const subGain = ctx.createGain();
-            subGain.gain.setValueAtTime(0.35, startTime);
+            overtoneGain.gain.setValueAtTime(0.14, startTime); // Very subtle 2nd harmonic airiness
 
-            osc1.connect(filter);
-            osc2.connect(subGain);
-            subGain.connect(filter);
+            fundamental.connect(filter);
+            overtone.connect(overtoneGain);
+            overtoneGain.connect(filter);
             filter.connect(gain);
-            gain.connect(ctx.destination);
 
-            osc1.start(startTime);
-            osc2.start(startTime);
+            gain.connect(masterGain);
+            if (delayNode) gain.connect(delayNode);
+
+            fundamental.start(startTime);
+            overtone.start(startTime);
             vibrato.start(startTime);
 
-            const stopAt = startTime + duration + 0.2;
-            osc1.stop(stopAt);
-            osc2.stop(stopAt);
+            const stopAt = startTime + duration + 0.3;
+            fundamental.stop(stopAt);
+            overtone.stop(stopAt);
             vibrato.stop(stopAt);
         }
 
-        // Auspicious Raga Mohanam (C Major Pentatonic: Sa Re Ga Pa Dha Sa')
-        // Similar festive wedding mood without copying any specific copyrighted song
-        const mohanamPhrases = [
-            // Ascending auspicious alaap phrase
+        // Gentle Veena / Santoor plucked string accent
+        function playVeenaPluck(ctx, freq, startTime, volume = 0.035) {
+            const osc = ctx.createOscillator();
+            const harm = ctx.createOscillator();
+            const filter = ctx.createBiquadFilter();
+            const gain = ctx.createGain();
+            const harmGain = ctx.createGain();
+
+            osc.type = 'triangle';
+            harm.type = 'sine';
+            osc.frequency.setValueAtTime(freq, startTime);
+            harm.frequency.setValueAtTime(freq * 2, startTime);
+
+            filter.type = 'lowpass';
+            filter.frequency.setValueAtTime(1400, startTime);
+            filter.frequency.exponentialRampToValueAtTime(320, startTime + 1.8);
+
+            gain.gain.setValueAtTime(0.0001, startTime);
+            gain.gain.exponentialRampToValueAtTime(volume, startTime + 0.018);
+            gain.gain.exponentialRampToValueAtTime(0.0001, startTime + 2.1);
+
+            harmGain.gain.setValueAtTime(0.25, startTime);
+
+            osc.connect(filter);
+            harm.connect(harmGain);
+            harmGain.connect(filter);
+            filter.connect(gain);
+
+            gain.connect(masterGain);
+            if (delayNode) gain.connect(delayNode);
+
+            osc.start(startTime);
+            harm.start(startTime);
+            osc.stop(startTime + 2.2);
+            harm.stop(startTime + 2.2);
+        }
+
+        // Serene Raga Hamsadhwani / Mohanam Flute Melodies (Soothing & Auspicious)
+        // Notes in D Major Pentatonic (D4=293.66, E4=329.63, F#4=369.99, A4=440.00, B4=493.88, D5=587.33, E5=659.25)
+        const sereneFlutePhrases = [
+            // Romantic, lyrical opening phrase
             [
-                { f: 261.63, d: 0.75 }, { f: 293.66, d: 0.55 }, { f: 329.63, d: 0.85 },
-                { f: 392.00, d: 1.10 }, { f: 329.63, d: 0.55 }, { f: 293.66, d: 0.90 }
+                { f: 440.00, d: 1.1 }, { f: 493.88, d: 0.8 }, { f: 587.33, d: 1.4 },
+                { f: 493.88, d: 0.7 }, { f: 440.00, d: 0.9 }, { f: 369.99, d: 1.5 }
             ],
-            // Joyful upper octave flourish
+            // Warm descending cadence
             [
-                { f: 329.63, d: 0.60 }, { f: 392.00, d: 0.65 }, { f: 440.00, d: 0.75 },
-                { f: 523.25, d: 1.30 }, { f: 440.00, d: 0.65 }, { f: 392.00, d: 1.00 }
+                { f: 369.99, d: 0.9 }, { f: 440.00, d: 0.9 }, { f: 369.99, d: 0.7 },
+                { f: 329.63, d: 1.1 }, { f: 293.66, d: 1.8 }
             ],
-            // Gentle descending blessing cadence
+            // Uplifting temple courtyard phrase
             [
-                { f: 523.25, d: 0.70 }, { f: 440.00, d: 0.60 }, { f: 392.00, d: 0.80 },
-                { f: 329.63, d: 0.70 }, { f: 293.66, d: 0.65 }, { f: 261.63, d: 1.40 }
+                { f: 293.66, d: 0.8 }, { f: 369.99, d: 0.8 }, { f: 440.00, d: 1.0 },
+                { f: 587.33, d: 1.2 }, { f: 659.25, d: 1.0 }, { f: 587.33, d: 1.6 }
             ],
-            // Festive swara call-and-response
+            // Gentle blessing resolution
             [
-                { f: 392.00, d: 0.65 }, { f: 440.00, d: 0.65 }, { f: 392.00, d: 0.60 },
-                { f: 329.63, d: 0.85 }, { f: 293.66, d: 0.60 }, { f: 329.63, d: 1.15 }
+                { f: 493.88, d: 0.9 }, { f: 440.00, d: 0.8 }, { f: 369.99, d: 0.9 },
+                { f: 329.63, d: 0.8 }, { f: 293.66, d: 1.9 }
             ]
         ];
 
-        function scheduleNextRagaPhrase() {
+        function scheduleNextFlutePhrase() {
             if (!window.isAudioPlaying || !window.audioCtx) return;
 
-            const phrase = mohanamPhrases[phraseIndex % mohanamPhrases.length];
+            const phrase = sereneFlutePhrases[phraseIndex % sereneFlutePhrases.length];
             phraseIndex++;
 
-            let cursor = window.audioCtx.currentTime + 0.1;
-            phrase.forEach(note => {
-                playMangalaNote(window.audioCtx, note.f, cursor, note.d);
-                cursor += note.d * 0.94; // Slight legato overlap
+            let cursor = window.audioCtx.currentTime + 0.15;
+            let prevFreq = null;
+
+            phrase.forEach((note, idx) => {
+                playBambooFluteNote(window.audioCtx, note.f, prevFreq, cursor, note.d);
+                // Soft Veena accompaniment pluck on key beats
+                if (idx === 0 || idx === 2 || idx === phrase.length - 1) {
+                    playVeenaPluck(window.audioCtx, note.f / 2, cursor, 0.032);
+                }
+                prevFreq = note.f;
+                cursor += note.d * 0.96;
             });
 
-            const totalMs = phrase.reduce((acc, n) => acc + n.d * 940, 0) + 1600;
-            melodyTimer = setTimeout(scheduleNextRagaPhrase, totalMs);
+            const totalMs = phrase.reduce((acc, n) => acc + n.d * 960, 0) + 1800;
+            melodyTimer = setTimeout(scheduleNextFlutePhrase, totalMs);
         }
 
         function toggleTempleAudio(forceStart = false) {
@@ -1537,7 +1595,7 @@
                 });
                 droneNodes = [];
                 clearTimeout(melodyTimer);
-                clearInterval(manjiraTimer);
+                clearInterval(pluckTimer);
                 window.isAudioPlaying = false;
 
                 if (btnIcon) btnIcon.classList.remove('hidden');
@@ -1545,8 +1603,8 @@
                     btnEq.classList.add('hidden');
                     btnEq.classList.remove('flex');
                 }
-                if (btnLabel) btnLabel.textContent = 'Play Mangala Vadya';
-                window.showToast('Sacred wedding ambience paused.');
+                if (btnLabel) btnLabel.textContent = 'Play Flute & Veena';
+                window.showToast('Flute & Veena music paused.');
                 return;
             }
 
@@ -1557,52 +1615,67 @@
                 if (!window.audioCtx) window.audioCtx = new AudioContext();
                 if (window.audioCtx.state === 'suspended') window.audioCtx.resume();
 
-                // Rich Tanpura Drone (Pa - Sa' - Sa' slightly detuned - Sa)
-                const tanpuraStrings = [
-                    { freq: 196.00, gain: 0.018 }, // Pa
-                    { freq: 261.63, gain: 0.022 }, // Sa
-                    { freq: 262.40, gain: 0.016 }, // Jivari shimmer Sa
-                    { freq: 130.81, gain: 0.026 }  // Mandra Sa
+                // Master gain + warm acoustic temple echo
+                masterGain = window.audioCtx.createGain();
+                masterGain.gain.setValueAtTime(0.85, window.audioCtx.currentTime);
+                masterGain.connect(window.audioCtx.destination);
+
+                delayNode = window.audioCtx.createDelay();
+                delayNode.delayTime.setValueAtTime(0.38, window.audioCtx.currentTime);
+                const feedback = window.audioCtx.createGain();
+                feedback.gain.setValueAtTime(0.28, window.audioCtx.currentTime);
+                const wetFilter = window.audioCtx.createBiquadFilter();
+                wetFilter.type = 'lowpass';
+                wetFilter.frequency.setValueAtTime(850, window.audioCtx.currentTime);
+
+                delayNode.connect(wetFilter);
+                wetFilter.connect(feedback);
+                feedback.connect(delayNode);
+                wetFilter.connect(masterGain);
+
+                // Ultra-soft, warm D-major Tanpura hum (sine waves only - zero buzz)
+                const warmDroneNotes = [
+                    { freq: 146.83, gain: 0.028 }, // D3 (Mandra Sa)
+                    { freq: 220.00, gain: 0.018 }, // A3 (Pa)
+                    { freq: 293.66, gain: 0.016 }  // D4 (Sa)
                 ];
 
-                tanpuraStrings.forEach((str) => {
+                warmDroneNotes.forEach((str) => {
                     const osc = window.audioCtx.createOscillator();
-                    const filter = window.audioCtx.createBiquadFilter();
                     const gain = window.audioCtx.createGain();
 
-                    osc.type = 'sawtooth';
+                    osc.type = 'sine';
                     osc.frequency.setValueAtTime(str.freq, window.audioCtx.currentTime);
 
-                    filter.type = 'lowpass';
-                    filter.frequency.setValueAtTime(380, window.audioCtx.currentTime);
-
                     gain.gain.setValueAtTime(0.0001, window.audioCtx.currentTime);
-                    gain.gain.exponentialRampToValueAtTime(str.gain, window.audioCtx.currentTime + 1.8);
+                    gain.gain.exponentialRampToValueAtTime(str.gain, window.audioCtx.currentTime + 2.0);
 
-                    osc.connect(filter);
-                    filter.connect(gain);
-                    gain.connect(window.audioCtx.destination);
+                    osc.connect(gain);
+                    gain.connect(masterGain);
 
                     osc.start();
                     droneNodes.push(osc);
                 });
 
                 window.isAudioPlaying = true;
-                scheduleNextRagaPhrase();
+                scheduleNextFlutePhrase();
 
-                // Gentle Manjira (Temple Cymbal) sparkle every 4.8s
-                manjiraTimer = setInterval(() => {
+                // Gentle Veena arpeggio sparkle between phrases
+                const arpeggioNotes = [293.66, 369.99, 440.00, 587.33];
+                let arpIdx = 0;
+                pluckTimer = setInterval(() => {
                     if (!window.isAudioPlaying) return;
-                    window.playTempleChime(window.audioCtx, 1046.50, 0);
-                }, 4800);
+                    playVeenaPluck(window.audioCtx, arpeggioNotes[arpIdx % arpeggioNotes.length], window.audioCtx.currentTime, 0.022);
+                    arpIdx++;
+                }, 2600);
 
                 if (btnIcon) btnIcon.classList.add('hidden');
                 if (btnEq) {
                     btnEq.classList.remove('hidden');
                     btnEq.classList.add('flex');
                 }
-                if (btnLabel) btnLabel.textContent = 'Mangala Vadya On';
-                if (!forceStart) window.showToast('Playing auspicious Raga Mohanam & Tanpura.');
+                if (btnLabel) btnLabel.textContent = 'Flute & Veena On';
+                if (!forceStart) window.showToast('Playing serene South Indian Flute & Veena.');
             } catch (err) {
                 console.warn('Audio playback blocked until interaction:', err);
             }
@@ -1626,10 +1699,10 @@
                 const AudioContext = window.AudioContext || window.webkitAudioContext;
                 if (!window.audioCtx) window.audioCtx = new AudioContext();
                 if (window.audioCtx.state === 'suspended') window.audioCtx.resume();
-                window.playTempleChime(window.audioCtx, 523.25, 0);
-                window.playTempleChime(window.audioCtx, 659.25, 0.12);
-                window.playTempleChime(window.audioCtx, 783.99, 0.24);
-                window.playTempleChime(window.audioCtx, 1046.50, 0.36);
+                window.playTempleChime(window.audioCtx, 587.33, 0);
+                window.playTempleChime(window.audioCtx, 739.99, 0.12);
+                window.playTempleChime(window.audioCtx, 880.00, 0.24);
+                window.playTempleChime(window.audioCtx, 1174.66, 0.36);
             } catch (e) {}
 
             window.showToast('Shubhamastu! Your sacred Akshata & jasmine blessings have been offered.');
