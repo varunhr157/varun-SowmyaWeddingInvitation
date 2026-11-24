@@ -349,14 +349,9 @@
 <body class="font-cormorant antialiased selection:bg-temple-gold selection:text-temple-darkMaroon">
 
     <!-- =========================================================
-         MYSTIC DAWNS IN DELHI (SITAR & TABLA COLLABORATION)
-         Uses local 'mystic-dawns-in-delhi.mp3' if present, or streams directly from StockTune CDN
+         MYSTIC DAWNS IN DELHI (DIRECT RELATIVE MP3 FROM GITHUB REPO)
     ========================================================== -->
-    <audio id="wedding-bgm" loop preload="auto">
-        <source src="mystic-dawns-in-delhi.mp3" type="audio/mpeg">
-        <source src="https://cdn.stocktune.com/free-music/mystic-dawns-in-delhi-285823-168505.mp3" type="audio/mpeg">
-        <source src="https://stocktune.com/free-music/mystic-dawns-in-delhi-285823-168505.mp3" type="audio/mpeg">
-    </audio>
+    <audio id="wedding-bgm" src="./mystic-dawns-in-delhi.mp3" loop preload="auto"></audio>
 
     <!-- Floating Marigold & Jasmine Petals Canvas -->
     <canvas id="petals-canvas"></canvas>
@@ -490,14 +485,14 @@
 
             <!-- Right Controls: Ambient Audio & Quick Blessings Link -->
             <div class="flex items-center gap-2 sm:gap-3">
-                <button id="audio-toggle-btn" onclick="toggleTempleAudio()" class="flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-temple-gold/70 bg-temple-maroon hover:bg-temple-gold hover:text-temple-darkMaroon text-temple-lightGold transition-all text-xs font-montserrat cursor-pointer" title="Toggle Mystic Dawns In Delhi (Sitar & Tabla)">
+                <button id="audio-toggle-btn" onclick="toggleTempleAudio()" class="flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-temple-gold/70 bg-temple-maroon hover:bg-temple-gold hover:text-temple-darkMaroon text-temple-lightGold transition-all text-xs font-montserrat cursor-pointer" title="Toggle Mystic Dawns In Delhi">
                     <i id="audio-icon" class="fa-solid fa-music"></i>
                     <span id="audio-eq" class="hidden items-end gap-0.5 h-3.5">
                         <span class="w-0.5 bg-temple-brightGold eq-bar-1"></span>
                         <span class="w-0.5 bg-temple-brightGold eq-bar-2"></span>
                         <span class="w-0.5 bg-temple-brightGold eq-bar-3"></span>
                     </span>
-                    <span id="audio-label" class="hidden sm:inline">Play Music</span>
+                    <span id="audio-label">Play Music</span>
                 </button>
                 <a href="#blessings" class="px-3.5 py-1.5 rounded-full bg-gradient-to-r from-temple-gold to-yellow-500 text-temple-darkMaroon font-cinzel font-bold text-xs tracking-wider uppercase shadow hover:brightness-110 transition">
                     Send Wishes
@@ -623,7 +618,7 @@
                 <div class="my-6 flex justify-center">
                     <div class="relative w-72 h-[390px] sm:w-[410px] sm:h-[530px] rounded-t-[205px] rounded-b-2xl p-2 bg-gradient-to-b from-temple-gold via-yellow-500 to-temple-gold shadow-[0_10px_35px_rgba(0,0,0,0.5)]">
                         <div class="relative w-full h-full rounded-t-[197px] rounded-b-xl overflow-hidden bg-gradient-to-b from-temple-maroon to-temple-darkMaroon border-2 border-temple-darkMaroon flex items-center justify-center">
-                            <img src="couple.png" alt="Sowmya & Varun Painted Portrait" 
+                            <img src="./couple.png" alt="Sowmya & Varun Painted Portrait" 
                                 onerror="this.style.display='none'; document.getElementById('portrait-fallback').classList.remove('hidden');"
                                 class="w-full h-full object-cover object-center">
                             
@@ -1288,7 +1283,6 @@
 
         function normalizeSheetRow(row, index) {
             if (!row || typeof row !== 'object') return null;
-            // Support case-insensitive keys from Google Sheets headers
             const lookup = {};
             Object.keys(row).forEach(k => {
                 lookup[k.toLowerCase().trim()] = row[k];
@@ -1317,7 +1311,6 @@
                 if (!response.ok) throw new Error('HTTP status ' + response.status);
                 const payload = await response.json();
 
-                // Support direct array or wrapped array ({ data: [...] } / { records: [...] })
                 const rawRows = Array.isArray(payload)
                     ? payload
                     : (Array.isArray(payload?.data) ? payload.data : (Array.isArray(payload?.records) ? payload.records : []));
@@ -1327,7 +1320,6 @@
                     .filter(Boolean);
 
                 if (normalized.length > 0) {
-                    // Merge any locally saved optimistic items not yet in sheet
                     const sheetKeys = new Set(normalized.map(i => `${i.name.toLowerCase()}|${i.blessing.toLowerCase()}`));
                     const localOnly = liveGuestBlessings.filter(item =>
                         !item.id.startsWith('seed-') &&
@@ -1379,7 +1371,6 @@
                 submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin text-temple-gold"></i> Saving Blessing...';
             }
 
-            // Remove initial seed placeholders once real guest blessings are added
             liveGuestBlessings = liveGuestBlessings.filter(item => !item.id.startsWith('seed-'));
 
             liveGuestBlessings.unshift({
@@ -1432,20 +1423,104 @@
             clearTimeout(toastTimeout);
             toastTimeout = setTimeout(() => {
                 banner.classList.add('translate-y-24', 'opacity-0');
-            }, 4000);
+            }, 4500);
         };
+
+        /* =========================================================
+           MYSTIC DAWNS IN DELHI AUDIO CONTROLLER (ROBUST PLAYBACK)
+        ========================================================== */
+        window.isAudioPlaying = false;
+        const bgmAudio = document.getElementById('wedding-bgm');
+
+        function setAudioUI(playing) {
+            const btnIcon = document.getElementById('audio-icon');
+            const btnEq = document.getElementById('audio-eq');
+            const btnLabel = document.getElementById('audio-label');
+
+            if (playing) {
+                if (btnIcon) btnIcon.classList.add('hidden');
+                if (btnEq) {
+                    btnEq.classList.remove('hidden');
+                    btnEq.classList.add('flex');
+                }
+                if (btnLabel) btnLabel.textContent = 'Music On';
+            } else {
+                if (btnIcon) btnIcon.classList.remove('hidden');
+                if (btnEq) {
+                    btnEq.classList.add('hidden');
+                    btnEq.classList.remove('flex');
+                }
+                if (btnLabel) btnLabel.textContent = 'Play Music';
+            }
+        }
+
+        if (bgmAudio) {
+            bgmAudio.addEventListener('playing', () => {
+                window.isAudioPlaying = true;
+                setAudioUI(true);
+            });
+            bgmAudio.addEventListener('pause', () => {
+                window.isAudioPlaying = false;
+                setAudioUI(false);
+            });
+            bgmAudio.addEventListener('error', (e) => {
+                console.error('Audio file error:', bgmAudio.error);
+                window.showToast('Audio file could not load. Please check mystic-dawns-in-delhi.mp3.');
+            });
+        }
+
+        function startBgmPlayback(showSuccessToast = false) {
+            if (!bgmAudio) return;
+            bgmAudio.muted = false;
+            bgmAudio.volume = 0.85;
+
+            if (bgmAudio.readyState === 0) {
+                bgmAudio.load();
+            }
+
+            const playPromise = bgmAudio.play();
+            if (playPromise !== undefined) {
+                playPromise.then(() => {
+                    window.isAudioPlaying = true;
+                    setAudioUI(true);
+                    if (showSuccessToast) {
+                        window.showToast('Playing "Mystic Dawns In Delhi".');
+                    }
+                }).catch((err) => {
+                    console.warn('Autoplay deferred until direct tap:', err);
+                    if (showSuccessToast) {
+                        window.showToast('Tap "Play Music" at the top right to start audio.');
+                    }
+                });
+            }
+        }
+
+        function toggleTempleAudio(forceStart = false) {
+            if (!bgmAudio) return;
+
+            if (window.isAudioPlaying && !forceStart) {
+                bgmAudio.pause();
+                window.isAudioPlaying = false;
+                setAudioUI(false);
+                window.showToast('Music paused.');
+                return;
+            }
+
+            startBgmPlayback(!forceStart);
+        }
 
         let isOpeningEnvelope = false;
         function openTempleDoors() {
+            // Always trigger audio directly inside the user click handler
+            if (!window.isAudioPlaying) {
+                startBgmPlayback(false);
+            }
+
             if (isOpeningEnvelope) return;
             isOpeningEnvelope = true;
 
             const curtain = document.getElementById('temple-curtain');
             curtain.classList.add('doors-open');
-            
-            if (!window.isAudioPlaying) {
-                toggleTempleAudio(true);
-            }
 
             setTimeout(() => {
                 triggerFlowerShower();
@@ -1490,58 +1565,6 @@
             if (btnEl) {
                 const rect = btnEl.getBoundingClientRect();
                 spawnBurstParticles(rect.left + rect.width / 2, rect.bottom, 18);
-            }
-        }
-
-        /* =========================================================
-           MYSTIC DAWNS IN DELHI AUDIO CONTROLLER
-        ========================================================== */
-        window.isAudioPlaying = false;
-
-        function setAudioUI(playing) {
-            const btnIcon = document.getElementById('audio-icon');
-            const btnEq = document.getElementById('audio-eq');
-            const btnLabel = document.getElementById('audio-label');
-
-            if (playing) {
-                if (btnIcon) btnIcon.classList.add('hidden');
-                if (btnEq) {
-                    btnEq.classList.remove('hidden');
-                    btnEq.classList.add('flex');
-                }
-                if (btnLabel) btnLabel.textContent = 'Music On';
-            } else {
-                if (btnIcon) btnIcon.classList.remove('hidden');
-                if (btnEq) {
-                    btnEq.classList.add('hidden');
-                    btnEq.classList.remove('flex');
-                }
-                if (btnLabel) btnLabel.textContent = 'Play Music';
-            }
-        }
-
-        function toggleTempleAudio(forceStart = false) {
-            const bgm = document.getElementById('wedding-bgm');
-            if (!bgm) return;
-
-            if (window.isAudioPlaying && !forceStart) {
-                bgm.pause();
-                window.isAudioPlaying = false;
-                setAudioUI(false);
-                window.showToast('Music paused.');
-                return;
-            }
-
-            bgm.volume = 0.75;
-            const playPromise = bgm.play();
-            if (playPromise !== undefined) {
-                playPromise.then(() => {
-                    window.isAudioPlaying = true;
-                    setAudioUI(true);
-                    if (!forceStart) window.showToast('Playing "Mystic Dawns In Delhi" (Sitar & Tabla).');
-                }).catch((err) => {
-                    console.warn('Audio playback waiting for user interaction:', err);
-                });
             }
         }
 
